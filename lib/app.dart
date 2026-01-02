@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:task_manager_firebase/ui/screens/splash_screen.dart';
+import 'package:task_manager_firebase/ui/screens/welcome_screen.dart';
 
 class TaskManager extends StatelessWidget {
   const TaskManager({super.key});
@@ -17,7 +18,30 @@ class TaskManager extends StatelessWidget {
           onSurface: Color(0xFF3A3A3C),
           onPrimary: Color(0xFFF2F2F5),
         ),
+        filledButtonTheme: FilledButtonThemeData(
+          style: ButtonStyle(
+            minimumSize: .resolveWith(
+              (states) => Size(MediaQuery.of(context).size.width, 50),
+            ),
+            shape: WidgetStatePropertyAll(
+              RoundedRectangleBorder(borderRadius: .circular(10)),
+            ),
+          ),
+        ),
+        outlinedButtonTheme: OutlinedButtonThemeData(
+          style: ButtonStyle(
+            backgroundColor: WidgetStatePropertyAll(Colors.white12),
+            side: WidgetStatePropertyAll(BorderSide(color: secondary)),
+            minimumSize: .resolveWith(
+              (states) => Size(MediaQuery.of(context).size.width, 50),
+            ),
+            shape: WidgetStatePropertyAll(
+              RoundedRectangleBorder(borderRadius: .circular(10)),
+            ),
+          ),
+        ),
       ),
+      routes: {WelcomeScreen.name: (_) => WelcomeScreen()},
       home: SplashScreen(),
     );
   }

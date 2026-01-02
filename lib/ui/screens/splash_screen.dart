@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:task_manager_firebase/ui/screens/welcome_screen.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    Future.delayed(
+      Duration(seconds: 2),
+          () => Navigator.pushNamedAndRemoveUntil(
+        context,
+        WelcomeScreen.name,
+            (route) => false,
+      ),
+    );
     return Scaffold(
       backgroundColor: ColorScheme.of(context).secondary,
       body: Center(

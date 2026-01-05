@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:task_manager_firebase/ui/widgets/topbar_widget.dart';
 
 class MainLayout extends StatefulWidget {
   const MainLayout({super.key});
@@ -19,7 +20,12 @@ class _MainLayoutState extends State<MainLayout> {
         onPressed: () {},
         child: Icon(Icons.add_circle_outline, size: 30),
       ),
-      body: Center(child: Text("MainLaout")),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(children: [TopbarWidget()]),
+        ),
+      ),
       bottomNavigationBar: BottomAppBar(
         shape: CircularNotchedRectangle(),
         notchMargin: 5,

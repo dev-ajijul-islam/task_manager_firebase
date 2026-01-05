@@ -1,5 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:task_manager_firebase/ui/screens/auth/sign_in_screen.dart';
+import 'package:task_manager_firebase/ui/screens/auth/sign_up_screen.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -69,7 +71,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             child: Column(
               mainAxisAlignment: .spaceBetween,
               children: [
-                SizedBox(height: 70),
+                SizedBox(height: 90),
                 CarouselSlider(
                   carouselController: _carouselController,
                   items: sliders.map((s) => Image.asset(s["image"])).toList(),
@@ -142,7 +144,16 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     spacing: 10,
                     children: [
                       FilledButton(onPressed: () {}, child: Text("Sign in")),
-                      OutlinedButton(onPressed: () {}, child: Text("Sign Up")),
+                      OutlinedButton(
+                        onPressed: () {
+                          Navigator.pushNamedAndRemoveUntil(
+                            context,
+                            SignUpScreen.name,
+                            (route) => false,
+                          );
+                        },
+                        child: Text("Sign Up"),
+                      ),
                     ],
                   ),
                 ),
@@ -153,7 +164,13 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             right: 20,
             top: 40,
             child: TextButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  SignInScreen.name,
+                  (route) => false,
+                );
+              },
               child: Text(
                 "Skip",
                 style: TextStyle(color: ColorScheme.of(context).onPrimary),

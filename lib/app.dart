@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:task_manager_firebase/ui/screens/auth/sign_in_screen.dart';
+import 'package:task_manager_firebase/ui/screens/auth/sign_up_screen.dart';
 import 'package:task_manager_firebase/ui/screens/splash_screen.dart';
 import 'package:task_manager_firebase/ui/screens/welcome_screen.dart';
 
@@ -28,6 +30,16 @@ class TaskManager extends StatelessWidget {
             ),
           ),
         ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ButtonStyle(
+            minimumSize: .resolveWith(
+              (states) => Size(MediaQuery.of(context).size.width, 50),
+            ),
+            shape: WidgetStatePropertyAll(
+              RoundedRectangleBorder(borderRadius: .circular(10)),
+            ),
+          ),
+        ),
         outlinedButtonTheme: OutlinedButtonThemeData(
           style: ButtonStyle(
             backgroundColor: WidgetStatePropertyAll(Colors.white12),
@@ -40,8 +52,20 @@ class TaskManager extends StatelessWidget {
             ),
           ),
         ),
+        inputDecorationTheme: InputDecorationTheme(
+          contentPadding: .symmetric(horizontal: 15),
+          fillColor: primary,
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: primary),
+          ),
+          border: OutlineInputBorder(gapPadding: 0),
+        ),
       ),
-      routes: {WelcomeScreen.name: (_) => WelcomeScreen()},
+      routes: {
+        WelcomeScreen.name: (_) => WelcomeScreen(),
+        SignUpScreen.name: (_) => SignUpScreen(),
+        SignInScreen.name: (_) => SignInScreen(),
+      },
       home: SplashScreen(),
     );
   }

@@ -6,7 +6,7 @@ class TopbarWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: .only(top: 20,right: 20,left: 20),
+      padding: .only(top: 20, right: 20, left: 20),
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(),
       child: Column(
@@ -25,12 +25,15 @@ class TopbarWidget extends StatelessWidget {
                     children: [
                       Text(
                         "Welcome back!",
-                        style: TextTheme.of(context).titleMedium,
+                        style: TextTheme.of(
+                          context,
+                        ).titleMedium?.copyWith(fontSize: 18),
                       ),
                       Text(
                         "MD. Ajijul Islam",
                         style: TextTheme.of(context).bodyMedium?.copyWith(
-                          color: ColorScheme.of(context).primary
+                          color: ColorScheme.of(context).primary,
+                          fontWeight: FontWeight.w800,
                         ),
                       ),
                     ],

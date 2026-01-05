@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:task_manager_firebase/ui/screens/main_layout/calender_screen.dart';
+import 'package:task_manager_firebase/ui/screens/main_layout/chat_screen.dart';
+import 'package:task_manager_firebase/ui/screens/main_layout/home_screen.dart';
+import 'package:task_manager_firebase/ui/screens/main_layout/profile_screen.dart';
 import 'package:task_manager_firebase/ui/widgets/topbar_widget.dart';
 
 class MainLayout extends StatefulWidget {
@@ -10,6 +14,14 @@ class MainLayout extends StatefulWidget {
 }
 
 class _MainLayoutState extends State<MainLayout> {
+  int _currentScreenIndex = 0;
+
+  final List<Widget> screen = [
+    HomeScreen(),
+    CalenderScreen(),
+    ChatScreen(),
+    ProfileScreen(),
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,9 +33,11 @@ class _MainLayoutState extends State<MainLayout> {
         child: Icon(Icons.add_circle_outline, size: 30),
       ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(children: [TopbarWidget()]),
+        child: Column(
+          children: [
+            TopbarWidget(),
+            Expanded(child: screen[_currentScreenIndex]),
+          ],
         ),
       ),
       bottomNavigationBar: BottomAppBar(
@@ -36,9 +50,20 @@ class _MainLayoutState extends State<MainLayout> {
             Row(
               spacing: 20,
               children: [
-                IconButton(onPressed: () {}, icon: Icon(Icons.home)),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    setState(() {
+                      _currentScreenIndex = 0;
+                    });
+                  },
+                  icon: Icon(Icons.home),
+                ),
+                IconButton(
+                  onPressed: () {
+                    setState(() {
+                      _currentScreenIndex = 1;
+                    });
+                  },
                   icon: Icon(Icons.calendar_today_outlined),
                 ),
               ],
@@ -46,9 +71,20 @@ class _MainLayoutState extends State<MainLayout> {
             Row(
               spacing: 20,
               children: [
-                IconButton(onPressed: () {}, icon: Icon(Icons.chat_outlined)),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    setState(() {
+                      _currentScreenIndex = 2;
+                    });
+                  },
+                  icon: Icon(Icons.chat_outlined),
+                ),
+                IconButton(
+                  onPressed: () {
+                    setState(() {
+                      _currentScreenIndex = 3;
+                    });
+                  },
                   icon: Icon(Icons.person_2_outlined),
                 ),
               ],

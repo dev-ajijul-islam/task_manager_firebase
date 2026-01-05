@@ -28,7 +28,9 @@ class TopbarWidget extends StatelessWidget {
                       ),
                       Text(
                         "MD. Ajijul Islam",
-                        style: TextTheme.of(context).bodyMedium,
+                        style: TextTheme.of(context).bodyMedium?.copyWith(
+                          color: ColorScheme.of(context).primary
+                        ),
                       ),
                     ],
                   ),

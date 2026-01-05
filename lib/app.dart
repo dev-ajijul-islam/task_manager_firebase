@@ -56,9 +56,10 @@ class TaskManager extends StatelessWidget {
           contentPadding: .symmetric(horizontal: 15),
           fillColor: primary,
           focusedBorder: OutlineInputBorder(
+            borderRadius: .circular(10),
             borderSide: BorderSide(color: primary),
           ),
-          border: OutlineInputBorder(gapPadding: 0),
+          border: OutlineInputBorder(borderRadius: .circular(10)),
         ),
       ),
       routes: {

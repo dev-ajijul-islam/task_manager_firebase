@@ -175,7 +175,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ),
 
                         const SizedBox(height: 10),
-
                         Align(
                           child: RichText(
                             text: TextSpan(

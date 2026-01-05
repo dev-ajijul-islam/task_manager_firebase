@@ -41,7 +41,7 @@ class _MainLayoutState extends State<MainLayout> {
         ),
       ),
       bottomNavigationBar: BottomAppBar(
-        color: ColorScheme.of(context).onPrimary,
+        color: Colors.white,
         shape: CircularNotchedRectangle(),
         notchMargin: 5,
         elevation: 5,

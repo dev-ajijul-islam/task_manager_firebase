@@ -19,21 +19,27 @@ class TopbarWidget extends StatelessWidget {
               Row(
                 spacing: 10,
                 children: [
-                  CircleAvatar(radius: 25),
+                  CircleAvatar(
+                    radius: 25,
+                    backgroundImage: AssetImage(
+                      "assets/images/dummy_profile.png",
+                    ),
+                  ),
                   Column(
                     crossAxisAlignment: .start,
                     children: [
                       Text(
                         "Welcome back!",
-                        style: TextTheme.of(
-                          context,
-                        ).titleMedium?.copyWith(fontSize: 18),
+                        style: TextTheme.of(context).titleMedium?.copyWith(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w400,
+                        ),
                       ),
                       Text(
                         "MD. Ajijul Islam",
                         style: TextTheme.of(context).bodyMedium?.copyWith(
                           color: ColorScheme.of(context).primary,
-                          fontWeight: FontWeight.w800,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                     ],
@@ -46,7 +52,7 @@ class TopbarWidget extends StatelessWidget {
                     onPressed: () {},
                     icon: Icon(
                       Icons.search_outlined,
-                      size: 30,
+                      size: 25,
                       color: ColorScheme.of(context).primary,
                     ),
                   ),
@@ -54,7 +60,7 @@ class TopbarWidget extends StatelessWidget {
                     onPressed: () {},
                     icon: Icon(
                       Icons.notifications_outlined,
-                      size: 30,
+                      size: 25,
                       color: ColorScheme.of(context).primary,
                     ),
                   ),

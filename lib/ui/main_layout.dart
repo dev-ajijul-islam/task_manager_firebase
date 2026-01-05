@@ -41,6 +41,7 @@ class _MainLayoutState extends State<MainLayout> {
         ),
       ),
       bottomNavigationBar: BottomAppBar(
+        color: ColorScheme.of(context).onPrimary,
         shape: CircularNotchedRectangle(),
         notchMargin: 5,
         elevation: 5,
@@ -51,20 +52,26 @@ class _MainLayoutState extends State<MainLayout> {
               spacing: 20,
               children: [
                 IconButton(
+                  color: _currentScreenIndex == 0
+                      ? ColorScheme.of(context).primary
+                      : null,
                   onPressed: () {
                     setState(() {
                       _currentScreenIndex = 0;
                     });
                   },
-                  icon: Icon(Icons.home),
+                  icon: Icon(Icons.add_home_outlined),
                 ),
                 IconButton(
+                  color: _currentScreenIndex == 1
+                      ? ColorScheme.of(context).primary
+                      : null,
                   onPressed: () {
                     setState(() {
                       _currentScreenIndex = 1;
                     });
                   },
-                  icon: Icon(Icons.calendar_today_outlined),
+                  icon: Icon(Icons.calendar_month_outlined),
                 ),
               ],
             ),
@@ -72,6 +79,9 @@ class _MainLayoutState extends State<MainLayout> {
               spacing: 20,
               children: [
                 IconButton(
+                  color: _currentScreenIndex == 2
+                      ? ColorScheme.of(context).primary
+                      : null,
                   onPressed: () {
                     setState(() {
                       _currentScreenIndex = 2;
@@ -80,6 +90,9 @@ class _MainLayoutState extends State<MainLayout> {
                   icon: Icon(Icons.chat_outlined),
                 ),
                 IconButton(
+                  color: _currentScreenIndex == 3
+                      ? ColorScheme.of(context).primary
+                      : null,
                   onPressed: () {
                     setState(() {
                       _currentScreenIndex = 3;

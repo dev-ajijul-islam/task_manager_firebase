@@ -6,6 +6,7 @@ class TopbarWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: .only(top: 20,right: 20,left: 20),
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(),
       child: Column(

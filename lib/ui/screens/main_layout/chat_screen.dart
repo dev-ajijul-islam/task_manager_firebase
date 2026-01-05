@@ -6,6 +6,7 @@ class ChatScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: ColorScheme.of(context).onPrimary,
       body: Center(child: Text("Chat Screen"),),
     );
   }

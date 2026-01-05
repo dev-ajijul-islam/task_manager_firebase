@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:task_manager_firebase/ui/main_layout.dart';
 import 'package:task_manager_firebase/ui/screens/auth/sign_in_screen.dart';
 import 'package:task_manager_firebase/ui/screens/auth/sign_up_screen.dart';
 import 'package:task_manager_firebase/ui/screens/splash_screen.dart';
@@ -12,6 +13,7 @@ class TaskManager extends StatelessWidget {
     Color primary = Color(0xFF3377FF);
     Color secondary = Color(0xFF2563EB);
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: .light(
           primary: primary,
@@ -53,6 +55,10 @@ class TaskManager extends StatelessWidget {
           ),
         ),
         inputDecorationTheme: InputDecorationTheme(
+          hintStyle: .new(
+            color: Colors.grey,
+            fontSize: 14
+          ),
           contentPadding: .symmetric(horizontal: 15),
           fillColor: primary,
           focusedBorder: OutlineInputBorder(
@@ -66,6 +72,7 @@ class TaskManager extends StatelessWidget {
         WelcomeScreen.name: (_) => WelcomeScreen(),
         SignUpScreen.name: (_) => SignUpScreen(),
         SignInScreen.name: (_) => SignInScreen(),
+        MainLayout.name : (_) => MainLayout()
       },
       home: SplashScreen(),
     );

@@ -15,10 +15,6 @@ class HomeScreen extends StatelessWidget {
           crossAxisAlignment: .start,
           children: [
             Categories(),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              child: Text("My Tasks", style: TextTheme.of(context).titleLarge),
-            ),
             TabBar(
               dividerHeight: 1,
               dividerColor: Colors.grey.shade200,

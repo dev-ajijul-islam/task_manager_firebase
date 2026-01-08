@@ -3,6 +3,7 @@ import 'package:task_manager_firebase/ui/screens/main_layout/calender_screen.dar
 import 'package:task_manager_firebase/ui/screens/main_layout/chat_screen.dart';
 import 'package:task_manager_firebase/ui/screens/main_layout/home_screen.dart';
 import 'package:task_manager_firebase/ui/screens/main_layout/profile_screen.dart';
+import 'package:task_manager_firebase/ui/widgets/create_task_dialog.dart';
 import 'package:task_manager_firebase/ui/widgets/topbar_widget.dart';
 
 class MainLayout extends StatefulWidget {
@@ -29,7 +30,9 @@ class _MainLayoutState extends State<MainLayout> {
       floatingActionButtonLocation: .centerDocked,
       floatingActionButton: FloatingActionButton(
         shape: RoundedRectangleBorder(borderRadius: .circular(100)),
-        onPressed: () {},
+        onPressed: () {
+          createTaskDialog(context: context);
+        },
         child: Icon(Icons.add_circle_outline, size: 30),
       ),
       body: SafeArea(

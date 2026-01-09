@@ -6,8 +6,6 @@ import 'package:task_manager_firebase/app/modules/home/views/topbar_widget.dart'
 
 class MainLayout extends StatelessWidget {
   MainLayout({super.key});
-  static String name = "main-layout";
-
   final LayoutController layoutController = Get.put(LayoutController());
 
   @override

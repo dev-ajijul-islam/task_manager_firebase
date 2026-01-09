@@ -1,56 +1,22 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:task_manager_firebase/app/modules/on_start/controllers/welcome_slider_controller.dart';
 import 'package:task_manager_firebase/app/routes/app_routes.dart';
 
-class WelcomeScreen extends StatefulWidget {
-  const WelcomeScreen({super.key});
+class WelcomeScreen extends StatelessWidget {
+  WelcomeScreen({super.key});
 
-  @override
-  State<WelcomeScreen> createState() => _WelcomeScreenState();
-}
-
-class _WelcomeScreenState extends State<WelcomeScreen> {
-  final List<Map<String, dynamic>> sliders = [
-    {
-      "title": "Stay organized. Get more done",
-      "description":
-          "Organize your workflow, prioritize with ease, and accomplish more every day.",
-      "image": "assets/images/sliders/slider_1.png",
-    },
-    {
-      "title": "Plan smarter. Work faster",
-      "description":
-          "Create clear plans, manage tasks efficiently, and boost your productivity.",
-      "image": "assets/images/sliders/slider_2.png",
-    },
-    {
-      "title": "Track progress effortlessly",
-      "description":
-          "Monitor your daily progress and stay motivated with simple tracking.",
-      "image": "assets/images/sliders/slider_3.png",
-    },
-    {
-      "title": "Focus on what matters",
-      "description":
-          "Eliminate distractions and focus on tasks that truly make an impact.",
-      "image": "assets/images/sliders/slider_4.png",
-    },
-    {
-      "title": "Achieve goals step by step",
-      "description":
-          "Break big goals into small steps and achieve them consistently.",
-      "image": "assets/images/sliders/slider_5.png",
-    },
-  ];
-
-  int currentSliderIndex = 0;
+  final WelcomeSliderController sliderController = Get.put(
+    WelcomeSliderController(),
+  );
 
   final CarouselSliderController _carouselController =
       CarouselSliderController();
 
   @override
   Widget build(BuildContext context) {
+    var currentSliderIndex = sliderController.currentSliderIndex;
     return Scaffold(
       body: Stack(
         alignment: .bottomCenter,
@@ -72,11 +38,12 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 SizedBox(height: 90),
                 CarouselSlider(
                   carouselController: _carouselController,
-                  items: sliders.map((s) => Image.asset(s["image"])).toList(),
+                  items: sliderController.sliders
+                      .map((s) => Image.asset(s["image"]))
+                      .toList(),
                   options: CarouselOptions(
-                    onPageChanged: (index, reason) => setState(() {
-                      currentSliderIndex = index;
-                    }),
+                    onPageChanged: (index, reason) => currentSliderIndex(index),
+
                     enlargeCenterPage: true,
                     enlargeFactor: 0.40,
                     enlargeStrategy: .zoom,
@@ -86,54 +53,60 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 ),
                 Padding(
                   padding: const EdgeInsets.all(20),
-                  child: Column(
-                    spacing: 5,
-                    children: [
-                      Text(
-                        sliders[currentSliderIndex]["title"],
-                        style: TextTheme.of(context).titleMedium?.copyWith(
-                          fontWeight: .w700,
-                          fontSize: 20,
+                  child: Obx(
+                    () => Column(
+                      spacing: 5,
+                      children: [
+                        Text(
+                          sliderController
+                              .sliders[currentSliderIndex()]["title"],
+                          style: TextTheme.of(context).titleMedium?.copyWith(
+                            fontWeight: .w700,
+                            fontSize: 20,
+                          ),
                         ),
-                      ),
-                      Text(
-                        sliders[currentSliderIndex]["description"],
-                        textAlign: .center,
-                        style: TextTheme.of(context).bodyMedium,
-                      ),
-                      SizedBox(height: 10),
-                      Row(
-                        mainAxisAlignment: .center,
-                        children: List.generate(sliders.length, (index) {
-                          final bool isActive = index == currentSliderIndex;
-                          return InkWell(
-                            onTap: () {
-                              setState(() {
-                                currentSliderIndex = index;
-                                _carouselController.animateToPage(
-                                  currentSliderIndex,
-                                );
-                              });
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 5,
-                              ),
-                              child: Container(
-                                width: 8,
-                                height: 8,
-                                decoration: BoxDecoration(
-                                  color: isActive
-                                      ? ColorScheme.of(context).onSecondary
-                                      : ColorScheme.of(context).onPrimary,
-                                  borderRadius: .circular(100),
+                        Text(
+                          sliderController
+                              .sliders[currentSliderIndex()]["description"],
+                          textAlign: .center,
+                          style: TextTheme.of(context).bodyMedium,
+                        ),
+                        SizedBox(height: 10),
+                        Row(
+                          mainAxisAlignment: .center,
+                          children: List.generate(
+                            sliderController.sliders.length,
+                            (index) {
+                              final bool isActive =
+                                  index == currentSliderIndex();
+                              return InkWell(
+                                onTap: () {
+                                  currentSliderIndex(index);
+                                  _carouselController.animateToPage(
+                                    currentSliderIndex(index),
+                                  );
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 5,
+                                  ),
+                                  child: Container(
+                                    width: 8,
+                                    height: 8,
+                                    decoration: BoxDecoration(
+                                      color: isActive
+                                          ? ColorScheme.of(context).onSecondary
+                                          : ColorScheme.of(context).onPrimary,
+                                      borderRadius: .circular(100),
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
-                          );
-                        }),
-                      ),
-                    ],
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 Padding(

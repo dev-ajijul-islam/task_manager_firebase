@@ -9,7 +9,7 @@ class SplashScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Future.delayed(
       Duration(seconds: 2),
-      () => Get.toNamed(AppRoutes.welcomeScreen),
+      () => Get.offAndToNamed(AppRoutes.welcomeScreen),
     );
     return Scaffold(
       backgroundColor: ColorScheme.of(context).secondary,
@@ -19,7 +19,7 @@ class SplashScreen extends StatelessWidget {
           children: [
             Image.asset("assets/images/splash_logo.png", width: 170),
             SizedBox(
-              width: 200,
+              width: 110,
               child: LinearProgressIndicator(color: Colors.white),
             ),
           ],

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:task_manager_firebase/ui/widgets/categories.dart';
-import 'package:task_manager_firebase/ui/widgets/task_card.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -16,8 +15,7 @@ class HomeScreen extends StatelessWidget {
           children: [
             Categories(),
             TabBar(
-              dividerHeight: 1,
-              dividerColor: Colors.grey.shade200,
+              dividerHeight: 0,
               indicator: BoxDecoration(shape: BoxShape.rectangle),
               tabs: [
                 Tab(child: Text("Active")),
@@ -28,13 +26,11 @@ class HomeScreen extends StatelessWidget {
               child: TabBarView(
                 children: [
                   ListView.separated(
-                    padding: .symmetric(horizontal: 20, vertical: 10),
-                    itemBuilder: (context, index) => TaskCard(),
+                    itemBuilder: (context, index) => Text("data"),
                     separatorBuilder: (context, index) => SizedBox(height: 10),
                     itemCount: 10,
-                  ),
-                  ListView.separated(
-                    itemBuilder: (context, index) => TaskCard(),
+                  ),   ListView.separated(
+                    itemBuilder: (context, index) => Text("data"),
                     separatorBuilder: (context, index) => SizedBox(height: 10),
                     itemCount: 10,
                   ),

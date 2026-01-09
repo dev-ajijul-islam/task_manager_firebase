@@ -152,8 +152,7 @@ void createTaskDialog({required BuildContext context}) {
                         ],
 
                         const SizedBox(height: 25),
-
-                     
+                        
                         Row(
                           children: [
                             Expanded(

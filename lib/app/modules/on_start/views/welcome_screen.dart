@@ -1,12 +1,10 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:task_manager_firebase/ui/screens/auth/sign_in_screen.dart';
-import 'package:task_manager_firebase/ui/screens/auth/sign_up_screen.dart';
+import 'package:get/get.dart';
+import 'package:task_manager_firebase/app/routes/app_routes.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
-
-  static String name = "welcome-screen";
 
   @override
   State<WelcomeScreen> createState() => _WelcomeScreenState();
@@ -146,11 +144,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       FilledButton(onPressed: () {}, child: Text("Sign in")),
                       OutlinedButton(
                         onPressed: () {
-                          Navigator.pushNamedAndRemoveUntil(
-                            context,
-                            SignUpScreen.name,
-                            (route) => false,
-                          );
+                          Get.toNamed(AppRoutes.mainLayout);
                         },
                         child: Text("Sign Up"),
                       ),
@@ -165,11 +159,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             top: 40,
             child: TextButton(
               onPressed: () {
-                Navigator.pushNamedAndRemoveUntil(
-                  context,
-                  SignInScreen.name,
-                  (route) => false,
-                );
+                Get.toNamed(AppRoutes.mainLayout);
               },
               child: Text(
                 "Skip",

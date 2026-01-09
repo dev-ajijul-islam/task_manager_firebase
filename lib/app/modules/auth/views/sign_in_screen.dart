@@ -1,10 +1,10 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:task_manager_firebase/ui/screens/auth/sign_up_screen.dart';
+import 'package:get/get.dart';
+import 'package:task_manager_firebase/app/routes/app_routes.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
-  static String name = "sign-in";
 
   @override
   State<SignInScreen> createState() => _SignInScreenState();
@@ -153,10 +153,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                 TextSpan(
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = () {
-                                      Navigator.pushNamed(
-                                        context,
-                                        SignUpScreen.name,
-                                      );
+                                     Get.toNamed(AppRoutes.signUpScreen);
                                     },
                                   text: "Register",
                                   style: TextStyle(

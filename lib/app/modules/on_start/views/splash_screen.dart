@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:task_manager_firebase/ui/main_layout.dart';
-import 'package:task_manager_firebase/ui/screens/welcome_screen.dart';
+import 'package:get/get.dart';
+import 'package:task_manager_firebase/app/routes/app_routes.dart';
+
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
@@ -9,11 +10,7 @@ class SplashScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Future.delayed(
       Duration(seconds: 2),
-          () => Navigator.pushNamedAndRemoveUntil(
-        context,
-        MainLayout.name,
-            (route) => false,
-      ),
+          () => Get.toNamed(AppRoutes.welcomeScreen),
     );
     return Scaffold(
       backgroundColor: ColorScheme.of(context).secondary,

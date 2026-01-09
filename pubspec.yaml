@@ -15,6 +15,7 @@ dependencies:
   carousel_slider: ^5.1.1
   linear_progress_bar: ^2.0.0+2
   avatar_stack: ^3.0.0
+  intl: ^0.20.2
 
 dev_dependencies:
   flutter_test:

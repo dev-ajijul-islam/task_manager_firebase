@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:task_manager_firebase/ui/screens/main_layout/calender_screen.dart';
-import 'package:task_manager_firebase/ui/screens/main_layout/chat_screen.dart';
+import 'package:task_manager_firebase/app/modules/calender/views/calender_screen.dart';
+import 'package:task_manager_firebase/app/modules/chat/views/chat_screen.dart';
 import 'package:task_manager_firebase/ui/screens/main_layout/home_screen.dart';
-import 'package:task_manager_firebase/ui/screens/main_layout/profile_screen.dart';
-import 'package:task_manager_firebase/ui/widgets/create_task_dialog.dart';
-import 'package:task_manager_firebase/ui/widgets/topbar_widget.dart';
+import 'package:task_manager_firebase/app/modules/profile/profile_screen.dart';
+import 'package:task_manager_firebase/app/modules/main_layout/views/create_task_dialog.dart';
+import 'package:task_manager_firebase/app/modules/home/views/topbar_widget.dart';
 
 class MainLayout extends StatefulWidget {
   const MainLayout({super.key});

@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import 'package:task_manager_firebase/app/modules/on_start/views/splash_screen.dart';
 import 'package:task_manager_firebase/app/modules/on_start/views/welcome_screen.dart';
 import 'package:task_manager_firebase/app/routes/app_routes.dart';
-import 'package:task_manager_firebase/ui/main_layout.dart';
+import 'package:task_manager_firebase/app/modules/main_layout/views/main_layout.dart';
 
 class PageRoutes {
   static final List<GetPage> routes = [

@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:task_manager_firebase/app/modules/auth/controllers/auth_controller.dart';
 import 'package:task_manager_firebase/app/routes/app_routes.dart';
 
 class SignInScreen extends StatefulWidget {
@@ -12,26 +13,22 @@ class SignInScreen extends StatefulWidget {
 
 class _SignInScreenState extends State<SignInScreen> {
   final _formKey = GlobalKey<FormState>();
-
+  final AuthController controller = Get.put(AuthController());
 
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
-
   void _submit() {
     if (_formKey.currentState!.validate()) {
-
-
       final email = emailController.text.trim();
       final password = passwordController.text;
-      debugPrint("Email: $email");
-      debugPrint("Password: $password");
+
+      controller.login(email: email, password: password);
     }
   }
 
   @override
   void dispose() {
-
     emailController.dispose();
     passwordController.dispose();
     super.dispose();
@@ -49,10 +46,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 spacing: 20,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    "Login",
-                    style: Theme.of(context).textTheme.titleLarge,
-                  ),
+                  Text("Login", style: Theme.of(context).textTheme.titleLarge),
                   Text(
                     "Welcome back, login to mnage your task effortlessly",
                     textAlign: TextAlign.center,
@@ -103,10 +97,20 @@ class _SignInScreenState extends State<SignInScreen> {
 
                         const SizedBox(height: 10),
 
-                        FilledButton(
-                          onPressed: _submit,
-                          child: const Text("Sign In"),
-                        ),
+                        Obx(() {
+                          return FilledButton(
+                            onPressed: controller.isLoading.value
+                                ? null
+                                : _submit,
+                            child: controller.isLoading.value == true
+                                ? SizedBox(
+                                    width: 15,
+                                    height: 15,
+                                    child: CircularProgressIndicator(),
+                                  )
+                                : Text("Sign In"),
+                          );
+                        }),
 
                         Row(
                           children: const [
@@ -146,20 +150,19 @@ class _SignInScreenState extends State<SignInScreen> {
                         Align(
                           child: RichText(
                             text: TextSpan(
-                              style:
-                              const TextStyle(color: Colors.black54),
+                              style: const TextStyle(color: Colors.black54),
                               text: "Already have an account? ",
                               children: [
                                 TextSpan(
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = () {
-                                     Get.toNamed(AppRoutes.signUpScreen);
+                                      Get.toNamed(AppRoutes.signUpScreen);
                                     },
                                   text: "Register",
                                   style: TextStyle(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .primary,
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.primary,
                                   ),
                                 ),
                               ],

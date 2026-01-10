@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:task_manager_firebase/app/data/services/firebase_services.dart';
+import 'package:task_manager_firebase/app/routes/app_routes.dart';
 
 class TopbarWidget extends StatelessWidget {
   const TopbarWidget({super.key});
@@ -16,35 +19,51 @@ class TopbarWidget extends StatelessWidget {
           Row(
             mainAxisAlignment: .spaceBetween,
             children: [
-              Row(
-                spacing: 10,
-                children: [
-                  CircleAvatar(
-                    radius: 25,
-                    backgroundImage: AssetImage(
-                      "assets/images/dummy_profile.png",
-                    ),
-                  ),
-                  Column(
-                    crossAxisAlignment: .start,
+              StreamBuilder(
+                stream: FirebaseServices.auth.authStateChanges(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return SizedBox(
+                      width: 30,
+                      height: 30,
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  if (snapshot.data == null) {
+                    Get.offAndToNamed(AppRoutes.signInScreen);
+                    return SizedBox();
+                  }
+                  return Row(
+                    spacing: 10,
                     children: [
-                      Text(
-                        "Welcome back!",
-                        style: TextTheme.of(context).titleMedium?.copyWith(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w400,
+                      CircleAvatar(
+                        radius: 25,
+                        backgroundImage: AssetImage(
+                          "assets/images/dummy_profile.png",
                         ),
                       ),
-                      Text(
-                        "MD. Ajijul Islam",
-                        style: TextTheme.of(context).bodyMedium?.copyWith(
-                          color: ColorScheme.of(context).primary,
-                          fontWeight: FontWeight.w500,
-                        ),
+                      Column(
+                        crossAxisAlignment: .start,
+                        children: [
+                          Text(
+                            "Welcome back!",
+                            style: TextTheme.of(context).titleMedium?.copyWith(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                          Text(
+                            "${snapshot.data?.displayName}",
+                            style: TextTheme.of(context).bodyMedium?.copyWith(
+                              color: ColorScheme.of(context).primary,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
                       ),
                     ],
-                  ),
-                ],
+                  );
+                },
               ),
               Row(
                 children: [

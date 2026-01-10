@@ -9,8 +9,8 @@ class AuthController extends GetxController {
   User? user;
 
   @override
-  void onInit() {
-    _watchUser();
+  void onInit()async {
+    watchUser();
     super.onInit();
   }
 
@@ -51,7 +51,7 @@ class AuthController extends GetxController {
   }
 
   ///----------------------------watch currentUser -----------------------
-  Future<void> _watchUser() async {
+  Future<void> watchUser() async {
     FirebaseServices.auth.authStateChanges().listen((user) async {
       user = user;
       final Future<String?> token = user!.getIdToken();

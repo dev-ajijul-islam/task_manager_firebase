@@ -146,15 +146,17 @@ void taskDetailsDialog({required BuildContext context}) {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      controller.isShowAdditionalInfo()
-                          ? const Text(
-                              "Additional Details",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                              ),
-                            )
-                          : SizedBox(),
+                      Obx(
+                        () => controller.isShowAdditionalInfo()
+                            ? const Text(
+                                "Additional Details",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
+                              )
+                            : SizedBox(),
+                      ),
                       TextButton(
                         onPressed: () {
                           controller.isShowAdditionalInfo(
@@ -198,7 +200,15 @@ void taskDetailsDialog({required BuildContext context}) {
                                       "Recurring Task :",
                                       style: TextStyle(color: Colors.grey),
                                     ),
-                                    Switch(value: false, onChanged: (v) {}),
+                                    Switch(
+                                      value: controller.isRecurring.value,
+                                      onChanged: (v) =>
+                                          controller.isRecurring.value = v,
+                                      activeThumbColor: Colors.white,
+                                      activeTrackColor: ColorScheme.of(
+                                        context,
+                                      ).primary,
+                                    ),
                                   ],
                                 ),
                               ],

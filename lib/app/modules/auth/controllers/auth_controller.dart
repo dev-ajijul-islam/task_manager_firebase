@@ -1,10 +1,18 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:task_manager_firebase/app/data/services/firebase_services.dart';
 import 'package:task_manager_firebase/app/routes/app_routes.dart';
 
 class AuthController extends GetxController {
   var isLoading = false.obs;
+  String? idToken;
+  User? user;
+
+  @override
+  void onInit() {
+    _watchUser();
+    super.onInit();
+  }
 
   ///-------------------------- sign in -------------------------------
   Future<void> login({required String email, required String password}) async {
@@ -40,5 +48,14 @@ class AuthController extends GetxController {
     } finally {
       isLoading.value = false;
     }
+  }
+
+  ///----------------------------watch currentUser -----------------------
+  Future<void> _watchUser() async {
+    FirebaseServices.auth.authStateChanges().listen((user) async {
+      user = user;
+      final Future<String?> token = user!.getIdToken();
+      idToken = await token;
+    });
   }
 }

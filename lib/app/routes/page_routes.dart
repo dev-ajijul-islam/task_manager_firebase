@@ -1,4 +1,6 @@
 import 'package:get/get.dart';
+import 'package:task_manager_firebase/app/modules/auth/views/sign_in_screen.dart';
+import 'package:task_manager_firebase/app/modules/auth/views/sign_up_screen.dart';
 import 'package:task_manager_firebase/app/modules/chat/views/chat_details.dart';
 import 'package:task_manager_firebase/app/modules/on_start/views/splash_screen.dart';
 import 'package:task_manager_firebase/app/modules/on_start/views/welcome_screen.dart';
@@ -11,5 +13,7 @@ class PageRoutes {
     GetPage(name: AppRoutes.welcomeScreen, page: () => WelcomeScreen()),
     GetPage(name: AppRoutes.mainLayout, page: () => MainLayout()),
     GetPage(name: AppRoutes.chatDetails, page: () => ChatDetailsScreen()),
+    GetPage(name: AppRoutes.signInScreen, page: () => SignInScreen()),
+    GetPage(name: AppRoutes.signUpScreen, page: () => SignUpScreen()),
   ];
 }

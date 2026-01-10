@@ -114,10 +114,15 @@ class WelcomeScreen extends StatelessWidget {
                   child: Column(
                     spacing: 10,
                     children: [
-                      FilledButton(onPressed: () {}, child: Text("Sign in")),
+                      FilledButton(
+                        onPressed: () {
+                          Get.toNamed(AppRoutes.signInScreen);
+                        },
+                        child: Text("Sign in"),
+                      ),
                       OutlinedButton(
                         onPressed: () {
-                          Get.toNamed(AppRoutes.mainLayout);
+                          Get.toNamed(AppRoutes.signUpScreen);
                         },
                         child: Text("Sign Up"),
                       ),
@@ -132,7 +137,7 @@ class WelcomeScreen extends StatelessWidget {
             top: 40,
             child: TextButton(
               onPressed: () {
-                Get.toNamed(AppRoutes.mainLayout);
+                Get.toNamed(AppRoutes.signInScreen);
               },
               child: Text(
                 "Skip",

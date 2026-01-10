@@ -1,7 +1,7 @@
 import 'package:task_manager_firebase/app/core/services/firebase_services.dart';
 
 class AuthProvider {
-  Future<void> signInWithEmailPassword({
+  Future<void> login({
     required String email,
     required String password,
   }) async {

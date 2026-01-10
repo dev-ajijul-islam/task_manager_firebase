@@ -6,6 +6,7 @@ import 'package:task_manager_firebase/app/routes/app_routes.dart';
 class AuthController extends GetxController {
   var isLoading = false.obs;
 
+  ///-------------------------- sign in -------------------------------
   Future<void> login({required String email, required String password}) async {
     isLoading.value = true;
     try {
@@ -15,7 +16,27 @@ class AuthController extends GetxController {
       );
       Get.offAndToNamed(AppRoutes.mainLayout);
     } on FirebaseException catch (e) {
-      Get.snackbar("Login Failed", "$e");
+      Get.snackbar("Login Failed", e.message.toString());
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  ///-----------------------------sign up --------------------------------
+  Future<void> signUp({
+    required String name,
+    required String email,
+    required String password,
+  }) async {
+    isLoading.value = true;
+    try {
+      await FirebaseServices.auth
+          .createUserWithEmailAndPassword(email: email, password: password)
+          .then((credentials) => credentials.user?.updateDisplayName(name));
+      Get.toNamed(AppRoutes.signInScreen);
+      Get.snackbar("Success", "sign up success");
+    } on FirebaseException catch (e) {
+      Get.snackbar("Sign up failed", e.message.toString());
     } finally {
       isLoading.value = false;
     }

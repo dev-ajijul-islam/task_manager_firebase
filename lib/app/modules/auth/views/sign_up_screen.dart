@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:task_manager_firebase/app/modules/auth/controllers/auth_controller.dart';
 import 'package:task_manager_firebase/app/modules/auth/views/sign_in_screen.dart';
 import 'package:task_manager_firebase/app/routes/app_routes.dart';
 
@@ -21,14 +22,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   void _submit() {
     if (_formKey.currentState!.validate()) {
-
       final name = nameController.text.trim();
       final email = emailController.text.trim();
       final password = passwordController.text;
-
-      debugPrint("Name: $name");
-      debugPrint("Email: $email");
-      debugPrint("Password: $password");
+      controller.signUp(name : name, email: email, password: password);
     }
   }
 
@@ -41,6 +38,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     super.dispose();
   }
 
+  final AuthController controller = Get.put(AuthController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -136,9 +134,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                         const SizedBox(height: 10),
 
-                        FilledButton(
-                          onPressed: _submit,
-                          child: const Text("Sign Up"),
+                        Obx(
+                          () => FilledButton(
+                            onPressed: controller.isLoading.value
+                                ? null
+                                : _submit,
+                            child: controller.isLoading.value == true
+                                ? SizedBox(
+                                    width: 15,
+                                    height: 15,
+                                    child: CircularProgressIndicator(),
+                                  )
+                                : Text("Sign Up"),
+                          ),
                         ),
 
                         Row(
@@ -179,8 +187,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         Align(
                           child: RichText(
                             text: TextSpan(
-                              style:
-                              const TextStyle(color: Colors.black54),
+                              style: const TextStyle(color: Colors.black54),
                               text: "Already have an account? ",
                               children: [
                                 TextSpan(
@@ -190,9 +197,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     },
                                   text: "Login",
                                   style: TextStyle(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .primary,
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.primary,
                                   ),
                                 ),
                               ],

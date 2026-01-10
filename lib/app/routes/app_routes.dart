@@ -4,4 +4,5 @@ class AppRoutes {
   static const mainLayout = "/main-layout";
   static const signInScreen = "/sign-in-screen";
   static const signUpScreen = "/sign-up-screen";
+  static const chatDetails = "/chat-details-screen";
 }

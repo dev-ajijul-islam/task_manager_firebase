@@ -27,20 +27,26 @@ class _CalenderScreenState extends State<CalenderScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               child: Row(
+                mainAxisAlignment: .spaceBetween,
                 children: [
-                  IconButton(icon: const Icon(Icons.menu), onPressed: () {}),
-                  const SizedBox(width: 8),
-                  Obx(
-                    () => Text(
-                      DateFormat.yMMMM().format(focusedDay.value),
-                      style: const TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
+                  Row(children: [
+                    IconButton(
+                      icon: const Icon(Icons.calendar_month_outlined),
+                      onPressed: () {},
+                    ),
+                    Obx(
+                          () => Text(
+                        DateFormat.yMMMM().format(focusedDay.value),
+                        style: const TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
-                  ),
-                  const Spacer(),
-                  IconButton(icon: const Icon(Icons.search), onPressed: () {}),
+                  ],),
+                  IconButton(onPressed: () {
+                    
+                  }, icon: Icon(Icons.search_outlined))
                 ],
               ),
             ),
@@ -123,7 +129,6 @@ class _CalenderScreenState extends State<CalenderScreen> {
     );
   }
 
-
   Map<String, String>? _taskForDay(DateTime day) {
     final tasks = {
       "2025-5-2": {"title": "Bug fixing", "priority": "High"},
@@ -138,7 +143,6 @@ class _CalenderScreenState extends State<CalenderScreen> {
 
     return tasks["${day.year}-${day.month}-${day.day}"];
   }
-
 
   Widget _buildDayCell(
     DateTime day, {

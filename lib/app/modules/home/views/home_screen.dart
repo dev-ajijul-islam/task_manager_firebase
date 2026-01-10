@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:task_manager_firebase/app/modules/home/views/categories.dart';
 import 'package:task_manager_firebase/app/modules/home/views/task_card.dart';
+import 'package:task_manager_firebase/app/modules/home/views/topbar_widget.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -14,6 +15,7 @@ class HomeScreen extends StatelessWidget {
         body: Column(
           crossAxisAlignment: .start,
           children: [
+            TopbarWidget(),
             Categories(),
             TabBar(
               dividerHeight: 0,

@@ -23,12 +23,7 @@ class MainLayout extends StatelessWidget {
         child: Icon(Icons.add_circle_outline, size: 30),
       ),
       body: SafeArea(
-        child: Column(
-          children: [
-            TopbarWidget(),
-            Obx(() => Expanded(child: screens[currentScreenIndex()])),
-          ],
-        ),
+        child: Obx(() => Expanded(child: screens[currentScreenIndex()])),
       ),
       bottomNavigationBar: Obx(
         () => BottomAppBar(

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:task_manager_firebase/app/data/services/firebase_services.dart';
-import 'package:task_manager_firebase/app/routes/app_routes.dart';
+import 'package:task_manager_firebase/app/services/firebase_services.dart';
 
 class TopbarWidget extends StatelessWidget {
   const TopbarWidget({super.key});

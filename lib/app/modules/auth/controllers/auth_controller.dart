@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:task_manager_firebase/app/data/services/firebase_services.dart';
 import 'package:task_manager_firebase/app/routes/app_routes.dart';
+import 'package:task_manager_firebase/app/services/firebase_services.dart';
 
 class AuthController extends GetxController {
   var isLoading = false.obs;
@@ -90,13 +90,13 @@ class AuthController extends GetxController {
   /// ----------------------------sign out ------------------------------
   Future<void> signOut() async {
     await FirebaseServices.auth.signOut();
-    Get.offNamedUntil(AppRoutes.signInScreen, (route) => false,);
+    Get.offNamedUntil(AppRoutes.signInScreen, (route) => false);
   }
 
   ///----------------------------watch currentUser -----------------------
   Future<void> watchUser() async {
     FirebaseServices.auth.authStateChanges().listen((user) async {
-      if(user != null){
+      if (user != null) {
         user = user;
         final Future<String?> token = user.getIdToken();
         idToken = await token;

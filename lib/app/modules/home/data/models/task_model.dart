@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class TaskModel {
   String? id;
+  String userId;
   final String title;
   final String description;
   final DateTime dueDate;
@@ -11,6 +14,7 @@ class TaskModel {
 
   TaskModel({
     this.id,
+    required this.userId,
     required this.title,
     required this.description,
     required this.dueDate,
@@ -24,27 +28,31 @@ class TaskModel {
   factory TaskModel.fromJson(Map<String, dynamic> json) {
     return TaskModel(
       id: json["uid"],
+      userId: json["userId"],
       title: json["title"],
       description: json["description"],
-      dueDate: json["dueDate"],
+      dueDate: (json["dueDate"] as Timestamp).toDate(),
       priority: json["priority"],
       status: json["status"],
-      tags: json["tags"],
+      tags: List<String>.from(json["tags"]),
       frequency: json["frequency"],
-      endDate: json["endDate"],
+      endDate: json["endDate"] != null
+          ? (json["endDate"] as Timestamp).toDate()
+          : null,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
+      "userId": userId,
       "title": title,
       "description": description,
-      "dueDate": dueDate,
+      "dueDate": Timestamp.fromDate(dueDate),
       "priority": priority,
       "status": status,
       "tags": tags,
       "frequency": frequency,
-      "endDate": endDate,
+      "endDate": endDate != null ? Timestamp.fromDate(endDate!) : null,
     };
   }
 }

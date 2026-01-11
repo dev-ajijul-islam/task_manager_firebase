@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:task_manager_firebase/app/modules/auth/controllers/auth_controller.dart';
 import 'package:task_manager_firebase/app/modules/home/data/models/task_model.dart';
 import 'package:task_manager_firebase/app/modules/main_layout/controllers/create_task_controller.dart';
 import 'package:task_manager_firebase/app/modules/main_layout/controllers/create_task_dialog_controller.dart';
+import 'package:task_manager_firebase/app/services/firebase_services.dart';
 
 void createTaskDialog({required BuildContext context}) {
   final CreateTaskDialogController dialogController = Get.put(
     CreateTaskDialogController(),
   );
+
   final CreateTaskController createTaskController = Get.put(
     CreateTaskController(),
   );
+
+  final AuthController authController = Get.put(AuthController());
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
@@ -200,11 +205,13 @@ void createTaskDialog({required BuildContext context}) {
                                       createTaskController.isLoading.value
                                       ? null
                                       : () {
-                                          if (!formKey.currentState!.validate())
+                                          if (!formKey.currentState!
+                                              .validate()) {
                                             return;
-
+                                          }
                                           createTaskController.createTask(
                                             task: TaskModel(
+                                              userId: FirebaseServices.auth.currentUser!.uid,
                                               title: dialogController
                                                   .titleController
                                                   .text

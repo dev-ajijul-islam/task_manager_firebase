@@ -4,13 +4,20 @@ import 'package:task_manager_firebase/app/modules/home/views/categories.dart';
 import 'package:task_manager_firebase/app/modules/home/views/task_card.dart';
 import 'package:task_manager_firebase/app/modules/home/views/topbar_widget.dart';
 import 'package:task_manager_firebase/app/modules/main_layout/controllers/active_task_controller.dart';
+import 'package:task_manager_firebase/app/modules/main_layout/controllers/complete_task_controller.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final ActiveTaskController getTaskController = Get.put(ActiveTaskController());
+    final ActiveTaskController activeTaskController = Get.put(
+      ActiveTaskController(),
+    );
+    final CompleteTaskController completeTaskController = Get.put(
+      CompleteTaskController(),
+    );
+
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -32,24 +39,33 @@ class HomeScreen extends StatelessWidget {
               child: TabBarView(
                 children: [
                   Obx(() {
-                    if (getTaskController.isLoading.value) {
+                    if (activeTaskController.isLoading.value) {
                       Center(child: CircularProgressIndicator());
                     }
-                    if (getTaskController.activeTasks.isEmpty) {
+                    if (activeTaskController.activeTasks.isEmpty) {
                       return Center(child: Text("Task not found"));
                     }
                     return ListView.separated(
                       itemBuilder: (context, index) => TaskCard(),
                       separatorBuilder: (context, index) =>
                           SizedBox(height: 10),
-                      itemCount: getTaskController.activeTasks.length,
+                      itemCount: activeTaskController.activeTasks.length,
                     );
                   }),
-                  ListView.separated(
-                    itemBuilder: (context, index) => TaskCard(),
-                    separatorBuilder: (context, index) => SizedBox(height: 10),
-                    itemCount: 10,
-                  ),
+                  Obx(() {
+                    if (completeTaskController.isLoading.value) {
+                      Center(child: CircularProgressIndicator());
+                    }
+                    if (completeTaskController.completedTasks.isEmpty) {
+                      return Center(child: Text("Task not found"));
+                    }
+                    return ListView.separated(
+                      itemBuilder: (context, index) => TaskCard(),
+                      separatorBuilder: (context, index) =>
+                          SizedBox(height: 10),
+                      itemCount: completeTaskController.completedTasks.length,
+                    );
+                  }),
                 ],
               ),
             ),

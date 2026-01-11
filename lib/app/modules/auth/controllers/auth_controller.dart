@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:task_manager_firebase/app/data/services/firebase_services.dart';
 import 'package:task_manager_firebase/app/routes/app_routes.dart';
 
@@ -10,7 +11,7 @@ class AuthController extends GetxController {
 
   @override
   void onInit() async {
-     watchUser();
+    watchUser();
     super.onInit();
   }
 
@@ -50,17 +51,56 @@ class AuthController extends GetxController {
     }
   }
 
+  ///================================= Google Sign In ===========================
+
+  Future<void> signInWithGoogle() async {
+    isLoading.value = true;
+    try {
+      final GoogleSignIn googleSignIn = GoogleSignIn.instance;
+
+      await googleSignIn.initialize();
+
+      final GoogleSignInAccount googleUser = await googleSignIn.authenticate();
+
+      final GoogleSignInAuthentication googleAuth = googleUser.authentication;
+
+      final String? idToken = googleAuth.idToken;
+
+      if (idToken == null) {
+        throw Exception("Google ID Token is null");
+      }
+
+      final credential = GoogleAuthProvider.credential(idToken: idToken);
+
+      final userCredential = await FirebaseServices.auth.signInWithCredential(
+        credential,
+      );
+
+      if (userCredential.user == null) return;
+
+      Get.snackbar("Success", "Sign in success");
+      Get.offNamedUntil(AppRoutes.mainLayout, (route) => false);
+    } on FirebaseException catch (e) {
+      Get.snackbar("Failed", e.message.toString());
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
   /// ----------------------------sign out ------------------------------
   Future<void> signOut() async {
     await FirebaseServices.auth.signOut();
+    Get.offNamedUntil(AppRoutes.signInScreen, (route) => false,);
   }
 
   ///----------------------------watch currentUser -----------------------
   Future<void> watchUser() async {
     FirebaseServices.auth.authStateChanges().listen((user) async {
-      user = user;
-      final Future<String?>? token = user?.getIdToken();
-      idToken = await token;
+      if(user != null){
+        user = user;
+        final Future<String?> token = user.getIdToken();
+        idToken = await token;
+      }
     });
   }
 }

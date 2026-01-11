@@ -127,21 +127,36 @@ class _SignInScreenState extends State<SignInScreen> {
 
                         SizedBox(
                           width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: () {},
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Image.asset(
-                                  "assets/images/google.png",
-                                  height: 20,
-                                ),
-                                const SizedBox(width: 10),
-                                const Text(
-                                  "Continue with Google",
-                                  style: TextStyle(color: Colors.black54),
-                                ),
-                              ],
+                          child: Obx(
+                            () => ElevatedButton(
+                              onPressed: controller.isLoading.value
+                                  ? null
+                                  : controller.signInWithGoogle,
+                              child: controller.isLoading.value
+                                  ? Center(
+                                      child: SizedBox(
+                                        width: 15,
+                                        height: 15,
+                                        child: CircularProgressIndicator(),
+                                      ),
+                                    )
+                                  : Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Image.asset(
+                                          "assets/images/google.png",
+                                          height: 20,
+                                        ),
+                                        const SizedBox(width: 10),
+                                        Text(
+                                          "Continue with Google",
+                                          style: TextStyle(
+                                            color: Colors.black54,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                             ),
                           ),
                         ),

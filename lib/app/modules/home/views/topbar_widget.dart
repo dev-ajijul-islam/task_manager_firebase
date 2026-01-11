@@ -30,7 +30,6 @@ class TopbarWidget extends StatelessWidget {
                     );
                   }
                   if (snapshot.data == null) {
-                    Get.offAndToNamed(AppRoutes.signInScreen);
                     return SizedBox();
                   }
                   return Row(

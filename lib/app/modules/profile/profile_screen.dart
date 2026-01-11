@@ -28,10 +28,6 @@ class ProfileScreen extends StatelessWidget {
                       return Center(child: CircularProgressIndicator());
                     }
                     if (snapshot.data == null) {
-                      Get.offNamedUntil(
-                        AppRoutes.signInScreen,
-                        (route) => false,
-                      );
                       return SizedBox();
                     }
                     return Row(

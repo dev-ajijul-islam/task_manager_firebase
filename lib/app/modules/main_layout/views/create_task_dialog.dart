@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:task_manager_firebase/app/modules/home/data/models/task_model.dart';
+import 'package:task_manager_firebase/app/modules/main_layout/controllers/create_task_controller.dart';
 import 'package:task_manager_firebase/app/modules/main_layout/controllers/create_task_dialog_controller.dart';
 
 void createTaskDialog({required BuildContext context}) {
-  final controller = Get.put(CreateTaskDialogController());
+  final CreateTaskDialogController dialogController = Get.put(
+    CreateTaskDialogController(),
+  );
+  final CreateTaskController createTaskController = Get.put(
+    CreateTaskController(),
+  );
+
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   showGeneralDialog(
     context: context,
@@ -29,164 +38,223 @@ void createTaskDialog({required BuildContext context}) {
               width: double.infinity,
               child: SingleChildScrollView(
                 child: Obx(
-                  () => Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                            "Create New Task",
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
+                  () => Form(
+                    key: formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        /// HEADER
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              "Create New Task",
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
-                          IconButton(
-                            onPressed: () => Get.back(),
-                            icon: const Icon(Icons.close),
-                          ),
-                        ],
-                      ),
-                      _buildLabel("Task Title"),
-                      _buildTextField(
-                        hint: "Enter Task Title",
-                        context: context,
-                      ),
-                      _buildLabel("Description (Optional)"),
-                      _buildTextField(
-                        hint: "Enter task description..",
-                        maxLines: 3,
-                        context: context,
-                      ),
-                      _buildLabel("Due Date"),
-                      _buildTextField(
-                        context: context,
-                        hint: controller.selectedDueDate.value == null
-                            ? "Select Date"
-                            : DateFormat(
-                                'MMM d, yyyy',
-                              ).format(controller.selectedDueDate.value!),
-                        icon: Icons.calendar_today_outlined,
-                        onIconTap: () => controller.selectDate(context, true),
-                        readOnly: true,
-                      ),
-                      _buildLabel("Priority"),
-                      _buildDropdownField(
-                        value: controller.selectedPriority.value,
-                        items: ["Low", "Medium", "High", "Urgent"],
-                        onChanged: (val) =>
-                            controller.selectedPriority.value = val!,
-                      ),
-                      _buildLabel("Status"),
-                      _buildDropdownField(
-                        value: controller.selectedStatus.value,
-                        items: ["To Do", "In Process", "Testing", "Completed"],
-                        onChanged: (val) =>
-                            controller.selectedStatus.value = val!,
-                      ),
-                      _buildLabel("Tags"),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: _buildTextField(
-                              hint: "Add Tags (Press Enter)",
-                              context: context,
+                            IconButton(
+                              onPressed: () => Get.back(),
+                              icon: const Icon(Icons.close),
                             ),
-                          ),
-                          const SizedBox(width: 10),
-                          _buildIconButton(Icons.add),
-                        ],
-                      ),
-                      const SizedBox(height: 15),
-                      Row(
-                        children: [
-                          const Icon(Icons.sync, size: 20),
-                          const SizedBox(width: 8),
-                          const Text(
-                            "Recurring Task",
-                            style: TextStyle(fontWeight: FontWeight.w600),
-                          ),
-                          const Spacer(),
-                          Switch(
-                            value: controller.isRecurring.value,
-                            onChanged: (v) => controller.isRecurring.value = v,
-                            activeThumbColor: Colors.white,
-                            activeTrackColor: ColorScheme.of(context).primary,
-                          ),
-                        ],
-                      ),
-                      if (controller.isRecurring.value) ...[
-                        _buildLabel("Frequency"),
-                        _buildDropdownField(
-                          value: controller.selectedFrequency.value,
-                          items: ["Daily", "Weekly", "Monthly", "Yearly"],
-                          onChanged: (val) =>
-                              controller.selectedFrequency.value = val!,
+                          ],
                         ),
-                        _buildLabel("End Date (Optional)"),
+
+                        _buildLabel("Task Title"),
                         _buildTextField(
+                          controller: dialogController.titleController,
+                          hint: "Enter Task Title",
                           context: context,
-                          hint: controller.selectedEndDate.value == null
-                              ? "dd-mm-yyyy"
-                              : DateFormat(
-                                  'dd-MM-yyyy',
-                                ).format(controller.selectedEndDate.value!),
+                          validator: (v) =>
+                              v!.isEmpty ? "Title is required" : null,
+                        ),
+
+                        _buildLabel("Description (Optional)"),
+                        _buildTextField(
+                          controller: dialogController.descriptionController,
+                          hint: "Enter task description..",
+                          maxLines: 3,
+                          context: context,
+                        ),
+
+                        _buildLabel("Due Date"),
+                        _buildTextField(
+                          controller: dialogController.dueDateController,
+                          context: context,
+                          hint: dialogController.selectedDueDate.value == null
+                              ? "Select Date"
+                              : DateFormat('MMM d, yyyy').format(
+                                  dialogController.selectedDueDate.value!,
+                                ),
                           icon: Icons.calendar_today_outlined,
                           onIconTap: () =>
-                              controller.selectDate(context, false),
+                              dialogController.selectDate(context, true),
                           readOnly: true,
+                          validator: (v) =>
+                              v!.isEmpty ? "Due date required" : null,
                         ),
-                        const Text(
-                          "Leave empty for indefinite recurrence",
-                          style: TextStyle(fontSize: 11, color: Colors.grey),
+
+                        _buildLabel("Priority"),
+                        _buildDropdownField(
+                          value: dialogController.selectedPriority.value,
+                          items: ["Low", "Medium", "High", "Urgent"],
+                          onChanged: (v) =>
+                              dialogController.selectedPriority.value = v!,
                         ),
-                      ],
-                      const SizedBox(height: 25),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: OutlinedButton(
-                              onPressed: () => Get.back(),
-                              style: OutlinedButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 15,
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                              ),
-                              child: const Text(
-                                "Cancel",
-                                style: TextStyle(color: Colors.black87),
+
+                        _buildLabel("Status"),
+                        _buildDropdownField(
+                          value: dialogController.selectedStatus.value,
+                          items: [
+                            "To Do",
+                            "In Process",
+                            "Testing",
+                            "Completed",
+                          ],
+                          onChanged: (v) =>
+                              dialogController.selectedStatus.value = v!,
+                        ),
+
+                        _buildLabel("Tags"),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: _buildTextField(
+                                controller: dialogController.tagsController,
+                                hint: "Add Tags (Press Enter)",
+                                context: context,
                               ),
                             ),
+                            const SizedBox(width: 10),
+                            _buildIconButton(Icons.add),
+                          ],
+                        ),
+
+                        const SizedBox(height: 15),
+
+                        /// RECURRING
+                        Row(
+                          children: [
+                            const Icon(Icons.sync, size: 20),
+                            const SizedBox(width: 8),
+                            const Text(
+                              "Recurring Task",
+                              style: TextStyle(fontWeight: FontWeight.w600),
+                            ),
+                            const Spacer(),
+                            Switch(
+                              value: dialogController.isRecurring.value,
+                              onChanged: (v) =>
+                                  dialogController.isRecurring.value = v,
+                            ),
+                          ],
+                        ),
+
+                        if (dialogController.isRecurring.value) ...[
+                          _buildLabel("Frequency"),
+                          _buildDropdownField(
+                            value: dialogController.selectedFrequency.value,
+                            items: ["Daily", "Weekly", "Monthly", "Yearly"],
+                            onChanged: (v) =>
+                                dialogController.selectedFrequency.value = v!,
                           ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: ElevatedButton(
-                              onPressed: () => Get.back(),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: ColorScheme.of(
-                                  context,
-                                ).primary,
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 15,
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                              ),
-                              child: const Text(
-                                "Create Task",
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
+
+                          _buildLabel("End Date (Optional)"),
+                          _buildTextField(
+                            controller: dialogController.endDateController,
+                            context: context,
+                            hint: dialogController.selectedEndDate.value == null
+                                ? "dd-mm-yyyy"
+                                : DateFormat('dd-MM-yyyy').format(
+                                    dialogController.selectedEndDate.value!,
+                                  ),
+                            icon: Icons.calendar_today_outlined,
+                            onIconTap: () =>
+                                dialogController.selectDate(context, false),
+                            readOnly: true,
+                          ),
+
+                          const Text(
+                            "Leave empty for indefinite recurrence",
+                            style: TextStyle(fontSize: 11, color: Colors.grey),
                           ),
                         ],
-                      ),
-                    ],
+
+                        const SizedBox(height: 25),
+
+                        /// ACTIONS
+                        Row(
+                          children: [
+                            Expanded(
+                              child: OutlinedButton(
+                                onPressed: () => Get.back(),
+                                child: const Text("Cancel"),
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Obx(
+                                () => ElevatedButton(
+                                  onPressed:
+                                      createTaskController.isLoading.value
+                                      ? null
+                                      : () {
+                                          if (!formKey.currentState!.validate())
+                                            return;
+
+                                          createTaskController.createTask(
+                                            task: TaskModel(
+                                              title: dialogController
+                                                  .titleController
+                                                  .text
+                                                  .trim(),
+                                              description: dialogController
+                                                  .descriptionController
+                                                  .text
+                                                  .trim(),
+                                              dueDate: dialogController
+                                                  .selectedDueDate
+                                                  .value!,
+                                              priority: dialogController
+                                                  .selectedPriority
+                                                  .value,
+                                              status: dialogController
+                                                  .selectedStatus
+                                                  .value,
+                                              tags: [
+                                                dialogController
+                                                    .tagsController
+                                                    .text
+                                                    .trim(),
+                                              ],
+                                              frequency: dialogController
+                                                  .selectedFrequency
+                                                  .value,
+                                              endDate: dialogController
+                                                  .selectedEndDate
+                                                  .value,
+                                            ),
+                                          );
+                                        },
+
+                                  child: createTaskController.isLoading.value
+                                      ? const SizedBox(
+                                          height: 18,
+                                          width: 18,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2,
+                                            color: Colors.white,
+                                          ),
+                                        )
+                                      : const Text("Create Task"),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -198,49 +266,37 @@ void createTaskDialog({required BuildContext context}) {
   );
 }
 
+/// ---------- WIDGETS ----------
+
 Widget _buildLabel(String text) {
   return Padding(
     padding: const EdgeInsets.only(top: 15, bottom: 6),
-    child: Text(
-      text,
-      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-    ),
+    child: Text(text, style: const TextStyle(fontWeight: FontWeight.bold)),
   );
 }
 
 Widget _buildTextField({
+  required TextEditingController controller,
   required String hint,
   int maxLines = 1,
   IconData? icon,
   VoidCallback? onIconTap,
   bool readOnly = false,
+  String? Function(String?)? validator,
   required BuildContext context,
 }) {
-  return TextField(
-    readOnly: readOnly,
+  return TextFormField(
+    controller: controller,
     maxLines: maxLines,
+    readOnly: readOnly,
+    validator: validator,
     onTap: readOnly ? onIconTap : null,
     decoration: InputDecoration(
       hintText: hint,
-      hintStyle: const TextStyle(color: Colors.grey, fontSize: 14),
       suffixIcon: icon != null
-          ? GestureDetector(
-              onTap: onIconTap,
-              child: Icon(icon, color: Colors.grey, size: 20),
-            )
+          ? GestureDetector(onTap: onIconTap, child: Icon(icon, size: 20))
           : null,
-      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-      enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(8),
-        borderSide: BorderSide(color: Colors.grey.shade200, width: 1.5),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(8),
-        borderSide: BorderSide(
-          color: ColorScheme.of(context).primary,
-          width: 1.5,
-        ),
-      ),
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
     ),
   );
 }
@@ -250,38 +306,16 @@ Widget _buildDropdownField({
   required List<String> items,
   required ValueChanged<String?> onChanged,
 }) {
-  return Container(
-    padding: const EdgeInsets.symmetric(horizontal: 12),
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(8),
-      border: Border.all(color: Colors.grey.shade200, width: 1.5),
-    ),
-    child: DropdownButtonHideUnderline(
-      child: DropdownButton<String>(
-        value: value,
-        isExpanded: true,
-        icon: const Icon(Icons.keyboard_arrow_down),
-        items: items.map((String val) {
-          return DropdownMenuItem<String>(
-            value: val,
-            child: Text(val, style: const TextStyle(fontSize: 14)),
-          );
-        }).toList(),
-        onChanged: onChanged,
-      ),
-    ),
+  return DropdownButtonFormField<String>(
+    value: value,
+    items: items
+        .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+        .toList(),
+    onChanged: onChanged,
+    decoration: const InputDecoration(border: OutlineInputBorder()),
   );
 }
 
 Widget _buildIconButton(IconData icon) {
-  return Container(
-    decoration: BoxDecoration(
-      border: Border.all(color: Colors.grey.shade300),
-      borderRadius: BorderRadius.circular(8),
-    ),
-    child: IconButton(
-      onPressed: () {},
-      icon: Icon(icon, color: Colors.grey),
-    ),
-  );
+  return IconButton(onPressed: () {}, icon: Icon(icon));
 }

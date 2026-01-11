@@ -1,59 +1,80 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:task_manager_firebase/app/data/services/firebase_services.dart';
+import 'package:task_manager_firebase/app/modules/auth/controllers/auth_controller.dart';
+import 'package:task_manager_firebase/app/routes/app_routes.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final AuthController authController = Get.put(AuthController());
     return Scaffold(
       backgroundColor: const Color(0xFFE8F6F6),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
             children: [
-              SizedBox(height: 20,),
+              SizedBox(height: 20),
+
               /// PROFILE INFO
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const CircleAvatar(
-                      radius: 30,
-                      backgroundImage: NetworkImage(
-                        "https://i.pravatar.cc/150?img=12",
-                      ),
-                    ),
-                    const SizedBox(width: 14),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
-                        Text(
-                          "Krish Shah",
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                          ),
+                child: StreamBuilder(
+                  stream: FirebaseServices.auth.authStateChanges(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator());
+                    }
+                    if (snapshot.data == null) {
+                      Get.offNamedUntil(
+                        AppRoutes.signInScreen,
+                        (route) => false,
+                      );
+                      return SizedBox();
+                    }
+                    return Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        CircleAvatar(
+                          radius: 30,
+                          backgroundImage: snapshot.data?.photoURL != null
+                              ? NetworkImage(snapshot.data!.photoURL.toString())
+                              : AssetImage("assets/images/dummy_profile.png"),
                         ),
-                        SizedBox(height: 4),
-                        Row(
+                        const SizedBox(width: 14),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Icon(Icons.email_outlined, size: 16),
-                            SizedBox(width: 6),
                             Text(
-                              "Krishshah@example.com",
-                              style: TextStyle(fontSize: 13),
+                              "${snapshot.data?.displayName}",
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            SizedBox(height: 4),
+                            Row(
+                              children: [
+                                Icon(Icons.email_outlined, size: 16),
+                                SizedBox(width: 6),
+                                Text(
+                                  "${snapshot.data?.email}",
+                                  style: TextStyle(fontSize: 13),
+                                ),
+                              ],
                             ),
                           ],
                         ),
+                        const Spacer(),
+                        IconButton(
+                          icon: const Icon(Icons.edit_outlined),
+                          onPressed: () {},
+                        ),
                       ],
-                    ),
-                    const Spacer(),
-                    IconButton(
-                      icon: const Icon(Icons.edit_outlined),
-                      onPressed: () {},
-                    )
-                  ],
+                    );
+                  },
                 ),
               ),
 
@@ -79,9 +100,7 @@ class ProfileScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(20),
                 decoration: const BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(28),
-                  ),
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -105,10 +124,7 @@ class ProfileScreen extends StatelessWidget {
                       title: "Privacy Policy",
                     ),
                     _Divider(),
-                    _MenuTile(
-                      icon: Icons.help_outline,
-                      title: "FAQs",
-                    ),
+                    _MenuTile(icon: Icons.help_outline, title: "FAQs"),
 
                     const SizedBox(height: 28),
 
@@ -122,19 +138,24 @@ class ProfileScreen extends StatelessWidget {
                     /// LOG OUT
                     Padding(
                       padding: const EdgeInsets.only(top: 10),
-                      child: Row(
-                        children: const [
-                          Icon(Icons.logout, color: Colors.red),
-                          SizedBox(width: 10),
-                          Text(
-                            "Log Out",
-                            style: TextStyle(
-                              color: Colors.red,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
+                      child: InkWell(
+                        onTap: () {
+                          authController.signOut();
+                        },
+                        child: Row(
+                          children: const [
+                            Icon(Icons.logout, color: Colors.red),
+                            SizedBox(width: 10),
+                            Text(
+                              "Log Out",
+                              style: TextStyle(
+                                color: Colors.red,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ],
@@ -169,16 +190,10 @@ class _StatCard extends StatelessWidget {
           children: [
             Text(
               value,
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w700,
-              ),
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
             ),
             const SizedBox(height: 6),
-            Text(
-              title,
-              style: const TextStyle(fontSize: 13),
-            ),
+            Text(title, style: const TextStyle(fontSize: 13)),
           ],
         ),
       ),
@@ -198,10 +213,7 @@ class _SectionTitle extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 12),
       child: Text(
         text,
-        style: const TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.w700,
-        ),
+        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
       ),
     );
   }
@@ -222,12 +234,7 @@ class _MenuTile extends StatelessWidget {
         children: [
           Icon(icon),
           const SizedBox(width: 14),
-          Expanded(
-            child: Text(
-              title,
-              style: const TextStyle(fontSize: 16),
-            ),
-          ),
+          Expanded(child: Text(title, style: const TextStyle(fontSize: 16))),
           const Icon(Icons.chevron_right),
         ],
       ),

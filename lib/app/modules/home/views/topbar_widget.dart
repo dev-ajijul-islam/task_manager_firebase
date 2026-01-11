@@ -38,9 +38,9 @@ class TopbarWidget extends StatelessWidget {
                     children: [
                       CircleAvatar(
                         radius: 25,
-                        backgroundImage: AssetImage(
-                          "assets/images/dummy_profile.png",
-                        ),
+                        backgroundImage: snapshot.data?.photoURL != null
+                            ? NetworkImage(snapshot.data!.photoURL.toString())
+                            : AssetImage("assets/images/dummy_profile.png"),
                       ),
                       Column(
                         crossAxisAlignment: .start,

@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MessageModel {
-  String senderId;
-  String text;
-  DateTime createdAt;
+  final String senderId;
+  final String text;
+  final DateTime createdAt;
 
   MessageModel({
     required this.senderId,
@@ -13,7 +13,7 @@ class MessageModel {
 
   factory MessageModel.fromJson(Map<String, dynamic> json) {
     return MessageModel(
-      senderId: json['senderId'] ?? '',
+      senderId: json['senderId'],
       text: json['text'] ?? '',
       createdAt: (json['createdAt'] as Timestamp).toDate(),
     );
@@ -22,6 +22,7 @@ class MessageModel {
   Map<String, dynamic> toJson() {
     return {
       'senderId': senderId,
+
       'text': text,
       'createdAt': createdAt,
     };

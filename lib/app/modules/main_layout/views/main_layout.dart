@@ -16,6 +16,7 @@ class MainLayout extends StatelessWidget {
       backgroundColor: Colors.grey.shade50,
       floatingActionButtonLocation: .centerDocked,
       floatingActionButton: FloatingActionButton(
+        heroTag: "add task fab",
         shape: RoundedRectangleBorder(borderRadius: .circular(100)),
         onPressed: () {
           createTaskDialog(context: context);

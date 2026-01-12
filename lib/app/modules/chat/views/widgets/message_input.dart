@@ -36,14 +36,6 @@ class MessageInput extends StatelessWidget {
                         ),
                       ),
                     ),
-                    IconButton(
-                      icon: const Icon(Icons.attach_file),
-                      onPressed: () {},
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.mic),
-                      onPressed: () {},
-                    ),
                   ],
                 ),
               ),

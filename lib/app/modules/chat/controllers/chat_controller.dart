@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:task_manager_firebase/app/modules/auth/data/models/user_model.dart';
 import 'package:task_manager_firebase/app/modules/chat/data/models/conversation_model.dart';
 import 'package:task_manager_firebase/app/services/firebase_services.dart';
 
@@ -9,50 +10,70 @@ class ChatController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    FirebaseServices.firestore
-        .collection("conversations")
-        .where("users", arrayContains: FirebaseServices.auth.currentUser?.uid)
-        .orderBy("createdAt", descending: true)
-        .snapshots()
-        .listen((snapshot) {
-      conversations.value = snapshot.docs
-          .map((doc) => ConversationModel.fromJson(doc.data(), doc.id))
-          .toList();
-      isLoading.value = false;
-    }, onError: (e) {
-      isLoading.value = false;
-    });
-  }
 
-
-  Future<ConversationModel> startConversation(String otherUserId) async {
     final currentUserId = FirebaseServices.auth.currentUser!.uid;
 
-    // Check if conversation already exists
+    FirebaseServices.firestore
+        .collection("conversations")
+        .where("userIds", arrayContains: currentUserId)
+        .snapshots()
+        .listen((snapshot) {
+          conversations.value = snapshot.docs
+              .map((doc) => ConversationModel.fromJson(doc.data(), doc.id))
+              .toList();
+          isLoading.value = false;
+        });
+  }
+
+  Future<ConversationModel> startConversation(UserModel otherUser) async {
+    final currentUser = FirebaseServices.auth.currentUser!;
+    final currentUserId = currentUser.uid;
+
+    // 🔍 Check if conversation already exists
     final query = await FirebaseServices.firestore
         .collection("conversations")
-        .where("users", arrayContains: currentUserId)
+        .where("userIds", arrayContains: currentUserId)
         .get();
 
-    for (var doc in query.docs) {
-      final users = List<String>.from(doc.data()["users"]);
-      if (users.contains(otherUserId)) {
-        // Conversation already exists
+    for (final doc in query.docs) {
+      final users = List<String>.from(doc.data()['userIds']);
+      if (users.contains(otherUser.uid)) {
         return ConversationModel.fromJson(doc.data(), doc.id);
       }
     }
 
+    // ➕ Create new conversation
+    final Map<String, dynamic> usersMaps = {
+      currentUserId: {
+        "uid": currentUserId,
+        "displayName": currentUser.displayName,
+        "email": currentUser.email,
+        "photoURL": currentUser.photoURL,
+      },
+      otherUser.uid: otherUser.toJson(),
+    };
 
-    final docRef =
-    await FirebaseServices.firestore.collection("conversations").add({
-      "users": [currentUserId, otherUserId],
-      "lastMessage": "",
-      "createdAt": DateTime.now(),
-    });
+    final docRef = await FirebaseServices.firestore
+        .collection("conversations")
+        .add({
+          "userIds": [currentUserId, otherUser.uid],
+          "usersMap": usersMaps,
+          "lastMessage": "",
+          "createdAt": DateTime.now(),
+        });
 
     return ConversationModel(
       id: docRef.id,
-      users: [currentUserId, otherUserId],
+      userIds: [currentUserId, otherUser.uid],
+      usersMap: {
+        currentUserId: UserModel(
+          uid: currentUserId,
+          displayName: currentUser.displayName ?? '',
+          email: currentUser.email ?? '',
+          photoURL: currentUser.photoURL ?? '',
+        ),
+        otherUser.uid: otherUser,
+      },
       lastMessage: "",
       createdAt: DateTime.now(),
     );

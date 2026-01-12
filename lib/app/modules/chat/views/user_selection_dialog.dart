@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:task_manager_firebase/app/modules/auth/data/models/user_model.dart';
 import 'package:task_manager_firebase/app/modules/chat/controllers/chat_controller.dart';
 import 'package:task_manager_firebase/app/services/firebase_services.dart';
 import 'package:task_manager_firebase/app/routes/app_routes.dart';
@@ -9,6 +10,7 @@ void selectUserDialog() {
 
   Get.dialog(
     Dialog(
+      backgroundColor: Colors.white,
       insetPadding: const EdgeInsets.symmetric(horizontal: 24),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: ConstrainedBox(
@@ -49,29 +51,26 @@ void selectUserDialog() {
                     itemCount: users.length,
                     separatorBuilder: (_, _) => const Divider(),
                     itemBuilder: (context, index) {
-                      final user = users[index];
+                      final user = UserModel.fromJson(users[index].data());
                       return ListTile(
                         leading: CircleAvatar(
-                          backgroundImage: NetworkImage(
-                            user['photoURL'] ??
-                                'https://i.pravatar.cc/150?img=$index',
-                          ),
+                          backgroundImage: user.photoURL != "null"
+                              ? NetworkImage(user.photoURL.toString())
+                              : AssetImage("assets/images/dummy_profile.png"),
                         ),
-                        title: Text(user['displayName'] ?? 'Unknown'),
-                        subtitle: Text(user['email'] ?? ''),
+                        title: Text(user.displayName),
+                        subtitle: Text(user.email),
                         trailing: IconButton(
                           color: ColorScheme.of(context).primary,
                           onPressed: () async {
-
                             final conversation = await chatController
-                                .startConversation(user.id);
+                                .startConversation(user);
                             Navigator.pop(context);
                             Get.toNamed(
                               AppRoutes.chatDetails,
                               arguments: {
                                 "conversationId": conversation.id,
-                                "otherUserName":
-                                    user['displayName'] ?? 'Unknown',
+                                "otherUser": user,
                               },
                             );
                           },

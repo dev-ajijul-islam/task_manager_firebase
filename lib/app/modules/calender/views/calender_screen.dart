@@ -19,7 +19,7 @@ class CalenderScreen extends StatelessWidget {
           children: [
             _header(),
             _monthSelector(),
-            const SizedBox(height: 12),
+            const SizedBox(height: 25),
             Expanded(child: _calendar(context)),
           ],
         ),
@@ -29,7 +29,7 @@ class CalenderScreen extends StatelessWidget {
 
   Widget _header() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -50,7 +50,7 @@ class CalenderScreen extends StatelessWidget {
       height: 40,
       child: Obx(
         () => ListView.separated(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
           scrollDirection: Axis.horizontal,
           itemCount: controller.months.length,
           separatorBuilder: (_, _) => const SizedBox(width: 10),
@@ -85,19 +85,21 @@ class CalenderScreen extends StatelessWidget {
 
   Widget _calendar(BuildContext context) {
     return Obx(
-      () => TableCalendar(
-        firstDay: DateTime.utc(2020, 1, 1),
-        lastDay: DateTime.utc(2030, 12, 31),
-        focusedDay: controller.focusedDay.value,
-        headerVisible: false,
-        rowHeight: 88,
-        calendarBuilders: CalendarBuilders(
-          defaultBuilder: (c, day, _) => _dayCell(context, day),
-          todayBuilder: (c, day, _) => _dayCell(context, day, isToday: true),
-          outsideBuilder: (c, day, _) =>
-              _dayCell(context, day, isOutside: true),
+      () => SingleChildScrollView(
+        child: TableCalendar(
+          firstDay: DateTime.utc(2020, 1, 1),
+          lastDay: DateTime.utc(2030, 12, 31),
+          focusedDay: controller.focusedDay.value,
+          headerVisible: false,
+          rowHeight: 80,
+          calendarBuilders: CalendarBuilders(
+            defaultBuilder: (c, day, _) => _dayCell(context, day),
+            todayBuilder: (c, day, _) => _dayCell(context, day, isToday: true),
+            outsideBuilder: (c, day, _) =>
+                _dayCell(context, day, isOutside: true),
+          ),
+          onPageChanged: controller.onPageChanged,
         ),
-        onPageChanged: controller.onPageChanged,
       ),
     );
   }

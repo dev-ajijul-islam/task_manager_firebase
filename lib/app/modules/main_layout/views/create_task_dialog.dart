@@ -203,69 +203,79 @@ void createTaskDialog({required BuildContext context}) {
                                   onPressed:
                                       createTaskController.isLoading.value
                                       ? null
-                                      : () {
+                                      : () async {
                                           if (!formKey.currentState!
                                               .validate()) {
                                             return;
                                           }
-                                          createTaskController.createTask(
-                                            task: TaskModel(
-                                              createdAt: DateTime.now(),
-                                              isRecurring: dialogController
-                                                  .isRecurring
-                                                  .value,
-                                              createdBy: {
-                                                "uid": FirebaseServices
-                                                    .auth
-                                                    .currentUser!
-                                                    .uid,
-                                                "displayName": FirebaseServices
-                                                    .auth
-                                                    .currentUser!
-                                                    .displayName
-                                                    .toString(),
-                                                "email": FirebaseServices
-                                                    .auth
-                                                    .currentUser!
-                                                    .email
-                                                    .toString(),
-                                                "photoURL": FirebaseServices
-                                                    .auth
-                                                    .currentUser!
-                                                    .photoURL
-                                                    .toString(),
-                                              },
-                                              title: dialogController
-                                                  .titleController
-                                                  .text
-                                                  .trim(),
-                                              description: dialogController
-                                                  .descriptionController
-                                                  .text
-                                                  .trim(),
-                                              dueDate: dialogController
-                                                  .selectedDueDate
-                                                  .value!,
-                                              priority: dialogController
-                                                  .selectedPriority
-                                                  .value,
-                                              status: dialogController
-                                                  .selectedStatus
-                                                  .value,
-                                              tags: [
-                                                dialogController
-                                                    .tagsController
-                                                    .text
-                                                    .trim(),
-                                              ],
-                                              frequency: dialogController
-                                                  .selectedFrequency
-                                                  .value,
-                                              endDate: dialogController
-                                                  .selectedEndDate
-                                                  .value,
-                                            ),
-                                          );
+                                          bool
+                                          success = await createTaskController
+                                              .createTask(
+                                                task: TaskModel(
+                                                  createdAt: DateTime.now(),
+                                                  isRecurring: dialogController
+                                                      .isRecurring
+                                                      .value,
+                                                  createdBy: {
+                                                    "uid": FirebaseServices
+                                                        .auth
+                                                        .currentUser!
+                                                        .uid,
+                                                    "displayName":
+                                                        FirebaseServices
+                                                            .auth
+                                                            .currentUser!
+                                                            .displayName
+                                                            .toString(),
+                                                    "email": FirebaseServices
+                                                        .auth
+                                                        .currentUser!
+                                                        .email
+                                                        .toString(),
+                                                    "photoURL": FirebaseServices
+                                                        .auth
+                                                        .currentUser!
+                                                        .photoURL
+                                                        .toString(),
+                                                  },
+                                                  title: dialogController
+                                                      .titleController
+                                                      .text
+                                                      .trim(),
+                                                  description: dialogController
+                                                      .descriptionController
+                                                      .text
+                                                      .trim(),
+                                                  dueDate: dialogController
+                                                      .selectedDueDate
+                                                      .value!,
+                                                  priority: dialogController
+                                                      .selectedPriority
+                                                      .value,
+                                                  status: dialogController
+                                                      .selectedStatus
+                                                      .value,
+                                                  tags: [
+                                                    dialogController
+                                                        .tagsController
+                                                        .text
+                                                        .trim(),
+                                                  ],
+                                                  frequency: dialogController
+                                                      .selectedFrequency
+                                                      .value,
+                                                  endDate: dialogController
+                                                      .selectedEndDate
+                                                      .value,
+                                                ),
+                                              );
+                                          if (success) {
+                                            Get.back();
+                                            Get.snackbar(
+                                              "Success",
+                                              "Task created successfully",
+                                            );
+                                          }
                                         },
 
                                   child: createTaskController.isLoading.value

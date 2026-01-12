@@ -11,7 +11,7 @@ void selectUserDialog() {
   Get.dialog(
     Dialog(
       backgroundColor: Colors.white,
-      insetPadding: const EdgeInsets.symmetric(horizontal: 24),
+      insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxHeight: 500),
@@ -20,7 +20,7 @@ void selectUserDialog() {
           crossAxisAlignment: .start,
           children: [
             Padding(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.only(top: 20, left: 20),
               child: const Text(
                 "Select a User to Continue",
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
@@ -48,8 +48,9 @@ void selectUserDialog() {
                   }
 
                   return ListView.separated(
+                    padding: .only(left: 20, bottom: 20),
                     itemCount: users.length,
-                    separatorBuilder: (_, _) => const Divider(),
+                    separatorBuilder: (_, _) => SizedBox(),
                     itemBuilder: (context, index) {
                       final user = UserModel.fromJson(users[index].data());
                       return ListTile(

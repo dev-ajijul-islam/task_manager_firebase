@@ -11,8 +11,10 @@ class CreateTaskController extends GetxController {
     try {
       await FirebaseServices.firestore
           .collection("tasks")
-          .add(task.toJson());
-      Get.snackbar("Success", "Task created successfully");
+          .add(task.toJson())
+          .then((value) {
+            return true;
+          });
       return true;
     } on FirebaseException catch (e) {
       Get.snackbar("Failed", e.message.toString());

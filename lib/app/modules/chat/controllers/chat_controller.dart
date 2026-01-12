@@ -10,7 +10,6 @@ class ChatController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    // Listen to conversations where current user is a participant
     FirebaseServices.firestore
         .collection("conversations")
         .where("users", arrayContains: FirebaseServices.auth.currentUser?.uid)
@@ -26,7 +25,7 @@ class ChatController extends GetxController {
     });
   }
 
-  /// Start a new conversation if not exists
+
   Future<ConversationModel> startConversation(String otherUserId) async {
     final currentUserId = FirebaseServices.auth.currentUser!.uid;
 
@@ -44,7 +43,7 @@ class ChatController extends GetxController {
       }
     }
 
-    // Create new conversation
+
     final docRef =
     await FirebaseServices.firestore.collection("conversations").add({
       "users": [currentUserId, otherUserId],

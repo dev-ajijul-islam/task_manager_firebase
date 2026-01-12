@@ -10,7 +10,7 @@ class CompleteTaskController extends GetxController {
   void onInit() {
     FirebaseServices.firestore
         .collection("tasks")
-        .where("userId", isEqualTo: FirebaseServices.auth.currentUser?.uid)
+        .where("createdBy.uid", isEqualTo: FirebaseServices.auth.currentUser?.uid)
         .where("status", isEqualTo: "Completed")
         .snapshots()
         .listen(

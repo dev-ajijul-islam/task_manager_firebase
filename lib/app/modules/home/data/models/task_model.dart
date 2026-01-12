@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class TaskModel {
   String? id;
-  String userId;
+  Map<String, dynamic> createdBy;
+  final bool isRecurring;
   final String title;
   final String description;
   final DateTime dueDate;
@@ -11,10 +14,14 @@ class TaskModel {
   final List<String> tags;
   final String? frequency;
   final DateTime? endDate;
+  final DateTime createdAt;
+  final DateTime? updatedAt;
 
   TaskModel({
     this.id,
-    required this.userId,
+    this.updatedAt,
+    required this.isRecurring,
+    required this.createdBy,
     required this.title,
     required this.description,
     required this.dueDate,
@@ -23,12 +30,15 @@ class TaskModel {
     required this.tags,
     required this.frequency,
     required this.endDate,
+    required this.createdAt,
   });
 
   factory TaskModel.fromJson(Map<String, dynamic> json) {
     return TaskModel(
       id: json["uid"],
-      userId: json["userId"],
+      isRecurring: json["isRecurring"],
+      createdAt: (json["createdAt"] as Timestamp).toDate(),
+      createdBy: json["createdBy"],
       title: json["title"],
       description: json["description"],
       dueDate: (json["dueDate"] as Timestamp).toDate(),
@@ -36,15 +46,22 @@ class TaskModel {
       status: json["status"],
       tags: List<String>.from(json["tags"]),
       frequency: json["frequency"],
+
       endDate: json["endDate"] != null
           ? (json["endDate"] as Timestamp).toDate()
+          : null,
+      updatedAt: json["updatedAt"] != null
+          ? (json["updatedAt"] as Timestamp).toDate()
           : null,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      "userId": userId,
+      "isRecurring": isRecurring,
+      "createdBy": createdBy,
+      "createdAt": createdAt,
+      "updatedAt": updatedAt,
       "title": title,
       "description": description,
       "dueDate": Timestamp.fromDate(dueDate),

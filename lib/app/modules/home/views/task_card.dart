@@ -1,31 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:task_manager_firebase/app/modules/home/data/models/task_model.dart';
 import 'package:task_manager_firebase/app/modules/home/views/task_details_dialog.dart';
 
 class TaskCard extends StatelessWidget {
-  const TaskCard({super.key});
+  const TaskCard({super.key, required this.task});
+  final TaskModel task;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        taskDetailsDialog(context: context);
+        taskDetailsDialog(context: context,task: task);
       },
       child: Card(
         color: Colors.white,
         child: Padding(
           padding: const EdgeInsets.all(10),
           child: Column(
+            crossAxisAlignment: .start,
             children: [
               Row(
                 mainAxisAlignment: .spaceBetween,
                 children: [
-                  Text(
-                    "Design task dashboard",
-                    style: TextTheme.of(context).titleMedium,
-                  ),
+                  Text(task.title, style: TextTheme.of(context).titleMedium),
                   Chip(
                     label: Text(
-                      "Medium",
+                      task.priority,
                       style: .new(
                         fontWeight: .bold,
                         color: ColorScheme.of(context).primary,
@@ -42,26 +43,43 @@ class TaskCard extends StatelessWidget {
                   ),
                 ],
               ),
-              Text("Create wireframes and mockup for the main dashboard"),
+              Text(task.description),
               Row(
                 spacing: 10,
-                children: [
-                  Text("UI", style: TextTheme.of(context).titleMedium),
-                  Text("Design", style: TextTheme.of(context).titleMedium),
-                ],
+                children: List.generate(
+                  task.tags.length,
+                  (index) => Text(
+                    task.tags[index],
+                    style: TextTheme.of(context).titleMedium,
+                  ),
+                ),
               ),
               Divider(color: Colors.grey.shade300),
               Row(
-                mainAxisAlignment: .spaceBetween,
+                mainAxisAlignment: task.status == "Completed"
+                    ? .center
+                    : .spaceBetween,
                 children: [
                   Row(
                     spacing: 5,
                     children: [
-                      Icon(Icons.history_toggle_off_outlined, size: 20),
-                      Text("In progress"),
+                      Icon(
+                        color: task.status == "Completed"
+                            ? Colors.green
+                            : Colors.grey,
+                        task.status == "Completed"
+                            ? Icons.check_circle_rounded
+                            : Icons.history_toggle_off_outlined,
+                        size: 20,
+                      ),
+                      Text(task.status),
                     ],
                   ),
-                  Text("Due Date : 10 May"),
+                  if (task.status != "Completed") ...[
+                    Text(
+                      "Due Date : ${DateFormat("d MMM hh:mm a").format(task.dueDate)}",
+                    ),
+                  ],
                 ],
               ),
             ],

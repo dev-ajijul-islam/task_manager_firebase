@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:task_manager_firebase/app/modules/home/controllers/task_details_dialog_controller.dart';
+import 'package:task_manager_firebase/app/modules/home/data/models/task_model.dart';
 
-void taskDetailsDialog({required BuildContext context}) {
+void taskDetailsDialog({
+  required BuildContext context,
+  required TaskModel task,
+}) {
   final controller = Get.put(TaskDetailsDialogController());
   final colorScheme = Theme.of(context).colorScheme;
 
@@ -32,9 +37,9 @@ void taskDetailsDialog({required BuildContext context}) {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     spacing: 5,
                     children: [
-                      const Expanded(
+                      Expanded(
                         child: Text(
-                          "Design Task Management Dashboard",
+                          task.title,
                           style: TextStyle(
                             fontSize: 17,
                             fontWeight: FontWeight.bold,
@@ -85,7 +90,7 @@ void taskDetailsDialog({required BuildContext context}) {
                       Expanded(
                         child: _buildInfoCard(
                           "Priority",
-                          "High",
+                          task.priority,
                           colorScheme,
                           isBadge: true,
                         ),
@@ -94,7 +99,7 @@ void taskDetailsDialog({required BuildContext context}) {
                       Expanded(
                         child: _buildInfoCard(
                           "Due Date",
-                          "May 10, 2025",
+                          DateFormat("d MMM hh:mm a").format(task.dueDate),
                           colorScheme,
                         ),
                       ),
@@ -107,7 +112,7 @@ void taskDetailsDialog({required BuildContext context}) {
                       Expanded(
                         child: _buildInfoCard(
                           "Status",
-                          "In Progress",
+                          task.status,
                           colorScheme,
                           hasIcon: true,
                         ),
@@ -125,6 +130,7 @@ void taskDetailsDialog({required BuildContext context}) {
                         ),
                         const SizedBox(height: 4),
                         Container(
+                          width: .infinity,
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
                             border: Border.all(
@@ -133,7 +139,7 @@ void taskDetailsDialog({required BuildContext context}) {
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(
-                            "Create wireframes and mockups for the main dashboard",
+                            task.description,
                             style: TextTheme.of(context).bodyMedium,
                           ),
                         ),
@@ -141,7 +147,6 @@ void taskDetailsDialog({required BuildContext context}) {
                     ),
                   ),
                   SizedBox(height: 10),
-
                   // Additional Details Section
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -186,12 +191,22 @@ void taskDetailsDialog({required BuildContext context}) {
                             ),
                             child: Column(
                               children: [
-                                _buildDetailRow("Created By :", "Rahul Sharma"),
-                                _buildDetailRow("Created On :", "Apr 21, 2025"),
                                 _buildDetailRow(
-                                  "Last Updated :",
-                                  "Apr 21, 2025",
+                                  "Created By :",
+                                  "${task.createdBy["displayName"]}",
                                 ),
+                                _buildDetailRow(
+                                  "Created On :",
+                                  DateFormat("d MMM y").format(task.createdAt),
+                                ),
+                                task.updatedAt == null
+                                    ? SizedBox()
+                                    : _buildDetailRow(
+                                        "Last Updated :",
+                                        DateFormat(
+                                          "d MMM y",
+                                        ).format(task.updatedAt!),
+                                      ),
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -201,13 +216,12 @@ void taskDetailsDialog({required BuildContext context}) {
                                       style: TextStyle(color: Colors.grey),
                                     ),
                                     Switch(
-                                      value: controller.isRecurring.value,
-                                      onChanged: (v) =>
-                                          controller.isRecurring.value = v,
+                                      value: task.isRecurring,
                                       activeThumbColor: Colors.white,
                                       activeTrackColor: ColorScheme.of(
                                         context,
                                       ).primary,
+                                      onChanged: (bool value) {},
                                     ),
                                   ],
                                 ),

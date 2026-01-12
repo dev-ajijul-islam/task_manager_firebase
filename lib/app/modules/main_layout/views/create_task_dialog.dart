@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:task_manager_firebase/app/modules/auth/controllers/auth_controller.dart';
+import 'package:task_manager_firebase/app/modules/auth/data/models/user_model.dart';
 import 'package:task_manager_firebase/app/modules/home/data/models/task_model.dart';
 import 'package:task_manager_firebase/app/modules/main_layout/controllers/create_task_controller.dart';
 import 'package:task_manager_firebase/app/modules/main_layout/controllers/create_task_dialog_controller.dart';
@@ -137,8 +138,6 @@ void createTaskDialog({required BuildContext context}) {
                         ),
 
                         const SizedBox(height: 15),
-
-                        /// RECURRING
                         Row(
                           children: [
                             const Icon(Icons.sync, size: 20),
@@ -211,7 +210,31 @@ void createTaskDialog({required BuildContext context}) {
                                           }
                                           createTaskController.createTask(
                                             task: TaskModel(
-                                              userId: FirebaseServices.auth.currentUser!.uid,
+                                              createdAt: DateTime.now(),
+                                              isRecurring: dialogController
+                                                  .isRecurring
+                                                  .value,
+                                              createdBy: {
+                                                "uid": FirebaseServices
+                                                    .auth
+                                                    .currentUser!
+                                                    .uid,
+                                                "displayName": FirebaseServices
+                                                    .auth
+                                                    .currentUser!
+                                                    .displayName
+                                                    .toString(),
+                                                "email": FirebaseServices
+                                                    .auth
+                                                    .currentUser!
+                                                    .email
+                                                    .toString(),
+                                                "photoURL": FirebaseServices
+                                                    .auth
+                                                    .currentUser!
+                                                    .photoURL
+                                                    .toString(),
+                                              },
                                               title: dialogController
                                                   .titleController
                                                   .text

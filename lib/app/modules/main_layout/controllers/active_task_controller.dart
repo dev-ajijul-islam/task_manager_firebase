@@ -9,18 +9,16 @@ class ActiveTaskController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-
     FirebaseServices.firestore
         .collection("tasks")
-        .where("userId", isEqualTo: FirebaseServices.auth.currentUser?.uid)
-        .where("status", isNotEqualTo: "Completed")
+        .where("createdBy.uid", isEqualTo: FirebaseServices.auth.currentUser?.uid)
+        .where("status", whereIn: ["In Process", "To Do", "Testing"])
         .snapshots()
         .listen(
           (snapshot) {
             activeTasks.value = snapshot.docs
                 .map((doc) => TaskModel.fromJson(doc.data()))
                 .toList();
-
             isLoading.value = false;
           },
           onError: (e) {

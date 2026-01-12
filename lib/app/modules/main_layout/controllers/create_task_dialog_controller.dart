@@ -8,15 +8,13 @@ class CreateTaskDialogController extends GetxController {
   var selectedPriority = "Medium".obs;
   var selectedStatus = "In Process".obs;
   var selectedFrequency = "Weekly".obs;
-  var isRecurring = true.obs;
+  var isRecurring = false.obs;
 
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
   final dueDateController = TextEditingController();
   final endDateController = TextEditingController();
   final tagsController = TextEditingController();
-
-
 
   void selectDate(BuildContext context, bool isDueDate) async {
     final date = await showDatePicker(

@@ -1,46 +1,53 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:task_manager_firebase/app/modules/chat/views/chat_details.dart';
-import 'package:task_manager_firebase/app/services/firebase_services.dart';
 import 'package:task_manager_firebase/app/modules/chat/controllers/chat_controller.dart';
+import 'package:task_manager_firebase/app/services/firebase_services.dart';
+import 'package:task_manager_firebase/app/routes/app_routes.dart';
 
+void selectUserDialog() {
+  final ChatController chatController = Get.put(ChatController());
 
-class UserSelectionDialog extends StatelessWidget {
-  const UserSelectionDialog({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final chatController = Get.find<ChatController>();
-
-    return Dialog(
+  Get.dialog(
+    Dialog(
+      insetPadding: const EdgeInsets.symmetric(horizontal: 24),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: Container(
-        height: 400,
-        padding: const EdgeInsets.all(16),
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxHeight: 500),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: .start,
           children: [
-            const Text(
-              "Select a User",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: const Text(
+                "Select a User to Continue",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              ),
             ),
             const SizedBox(height: 12),
-            Expanded(
+
+            // Flexible ensures ListView works inside Column
+            Flexible(
               child: FutureBuilder(
-                future: FirebaseServices.firestore
-                    .collection("users")
-                    .get(),
+                future: FirebaseServices.firestore.collection("users").get(),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
                     return const Center(child: CircularProgressIndicator());
                   }
+
                   final users = snapshot.data!.docs
-                      .where((u) =>
-                  u.id != FirebaseServices.auth.currentUser!.uid)
+                      .where(
+                        (u) => u.id != FirebaseServices.auth.currentUser!.uid,
+                      )
                       .toList();
+
+                  if (users.isEmpty) {
+                    return const Center(child: Text("No users available"));
+                  }
 
                   return ListView.separated(
                     itemCount: users.length,
-                    separatorBuilder: (_, __) => const Divider(),
+                    separatorBuilder: (_, _) => const Divider(),
                     itemBuilder: (context, index) {
                       final user = users[index];
                       return ListTile(
@@ -52,18 +59,23 @@ class UserSelectionDialog extends StatelessWidget {
                         ),
                         title: Text(user['displayName'] ?? 'Unknown'),
                         subtitle: Text(user['email'] ?? ''),
-                        trailing: ElevatedButton(
+                        trailing: IconButton(
+                          color: ColorScheme.of(context).primary,
                           onPressed: () async {
-                            final conversation =
-                            await chatController.startConversation(user.id);
+
+                            final conversation = await chatController
+                                .startConversation(user.id);
                             Navigator.pop(context);
-                            // Navigate to chat details
-                            Get.to(() => ChatDetailsScreen(
-                              conversationId: conversation.id,
-                              otherUserName: user['displayName'] ?? '',
-                            ));
+                            Get.toNamed(
+                              AppRoutes.chatDetails,
+                              arguments: {
+                                "conversationId": conversation.id,
+                                "otherUserName":
+                                    user['displayName'] ?? 'Unknown',
+                              },
+                            );
                           },
-                          child: const Text("Start"),
+                          icon: Icon(Icons.send_outlined),
                         ),
                       );
                     },
@@ -74,6 +86,6 @@ class UserSelectionDialog extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
+    ),
+  );
 }

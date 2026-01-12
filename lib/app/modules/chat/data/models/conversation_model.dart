@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class ConversationModel {
   String id;
   List<String> users;
@@ -16,7 +18,7 @@ class ConversationModel {
       id: docId,
       users: List<String>.from(json['users'] ?? []),
       lastMessage: json['lastMessage'] ?? "",
-      createdAt: (json['createdAt'] as DateTime),
+      createdAt: (json['createdAt'] as Timestamp).toDate(),
     );
   }
 

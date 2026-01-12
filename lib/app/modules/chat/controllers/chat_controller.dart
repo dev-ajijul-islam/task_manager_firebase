@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
 import 'package:task_manager_firebase/app/modules/chat/data/models/conversation_model.dart';
 import 'package:task_manager_firebase/app/services/firebase_services.dart';
-import 'package:task_manager_firebase/app/modules/chat/data/models/message_model.dart';
 
 class ChatController extends GetxController {
   RxList<ConversationModel> conversations = <ConversationModel>[].obs;

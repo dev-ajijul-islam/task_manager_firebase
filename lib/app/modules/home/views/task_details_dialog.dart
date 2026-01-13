@@ -59,7 +59,11 @@ void taskDetailsDialog({
                       GestureDetector(
                         onTap: () {
                           Get.back();
-                          createOrUpdateTaskDialog(context: context);
+                          createOrUpdateTaskDialog(
+                            context: context,
+                            isUpdate: true,
+                            task: task
+                          );
                         },
                         child: Container(
                           width: 80,
@@ -363,7 +367,8 @@ Widget _buildCommentsTab(
                         photoURL: FirebaseServices.auth.currentUser!.photoURL
                             .toString(),
                       ),
-                      comment: commentsController.commentTEController.text.trim(),
+                      comment: commentsController.commentTEController.text
+                          .trim(),
                       commentedAt: DateTime.now(),
                       taskId: taskModel.id.toString(),
                     ),

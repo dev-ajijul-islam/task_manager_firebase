@@ -7,10 +7,20 @@ import 'package:task_manager_firebase/app/modules/main_layout/controllers/create
 import 'package:task_manager_firebase/app/modules/main_layout/controllers/create_task_dialog_controller.dart';
 import 'package:task_manager_firebase/app/services/firebase_services.dart';
 
-void createOrUpdateTaskDialog({required BuildContext context}) {
+void createOrUpdateTaskDialog({required BuildContext context,bool isUpdate = false,TaskModel? task }) {
   final CreateTaskDialogController dialogController = Get.put(
     CreateTaskDialogController(),
   );
+
+  if(isUpdate){
+    dialogController.titleController.text = task!.title;
+    dialogController.descriptionController.text = task.description;
+    dialogController.dueDateController.text = task.dueDate.toString();
+    dialogController.endDateController.text = task.endDate.toString();
+    dialogController.tagsController.text = task.tags.toString();
+  }else{
+    dialogController.clearFields();
+  }
 
   final CreateTaskController createTaskController = Get.put(
     CreateTaskController(),

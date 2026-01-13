@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:task_manager_firebase/app/modules/home/data/models/task_model.dart';
 
 class CreateTaskDialogController extends GetxController {
+  final bool? isUpdate;
+  final TaskModel? task;
   var selectedDueDate = Rxn<DateTime>();
   var selectedEndDate = Rxn<DateTime>();
   var selectedPriority = "Medium".obs;
@@ -15,6 +18,9 @@ class CreateTaskDialogController extends GetxController {
   final dueDateController = TextEditingController();
   final endDateController = TextEditingController();
   final tagsController = TextEditingController();
+
+  CreateTaskDialogController({this.isUpdate, this.task});
+
 
   void selectDate(BuildContext context, bool isDueDate) async {
     final date = await showDatePicker(
@@ -33,6 +39,15 @@ class CreateTaskDialogController extends GetxController {
         endDateController.text = DateFormat('dd-MM-yyyy').format(date);
       }
     }
+  }
+
+
+  void clearFields(){
+    titleController.clear();
+    descriptionController.clear();
+    dueDateController.clear();
+    endDateController.clear();
+    tagsController.clear();
   }
 
   @override

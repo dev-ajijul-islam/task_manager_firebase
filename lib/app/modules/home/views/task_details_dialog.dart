@@ -35,12 +35,11 @@ void taskDetailsDialog({
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    spacing: 5,
                     children: [
                       Expanded(
                         child: Text(
                           task.title,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 17,
                             fontWeight: FontWeight.bold,
                           ),
@@ -50,16 +49,15 @@ void taskDetailsDialog({
                         width: 80,
                         height: 40,
                         decoration: BoxDecoration(
-                          borderRadius: .circular(10),
-                          border: .all(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: Colors.grey),
                         ),
-
                         child: Row(
-                          spacing: 5,
-                          mainAxisAlignment: .center,
-                          crossAxisAlignment: .center,
-                          children: [
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: const [
                             Icon(Icons.edit_calendar_outlined, size: 18),
+                            SizedBox(width: 5),
                             Text("Edit"),
                           ],
                         ),
@@ -85,154 +83,26 @@ void taskDetailsDialog({
                     ),
                   ),
                   const SizedBox(height: 20),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _buildInfoCard(
-                          "Priority",
-                          task.priority,
-                          colorScheme,
-                          isBadge: true,
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: _buildInfoCard(
-                          "Due Date",
-                          DateFormat("d MMM hh:mm a").format(task.dueDate),
-                          colorScheme,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-                  Row(
-                    crossAxisAlignment: .start,
-                    children: [
-                      Expanded(
-                        child: _buildInfoCard(
-                          "Status",
-                          task.status,
-                          colorScheme,
-                          hasIcon: true,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  Flexible(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          "Description",
-                          style: TextStyle(color: Colors.grey, fontSize: 12),
-                        ),
-                        const SizedBox(height: 4),
-                        Container(
-                          width: .infinity,
-                          padding: const EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: colorScheme.outlineVariant,
-                            ),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Text(
-                            task.description,
-                            style: TextTheme.of(context).bodyMedium,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  // Additional Details Section
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Obx(
-                        () => controller.isShowAdditionalInfo()
-                            ? const Text(
-                                "Additional Details",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                ),
-                              )
-                            : SizedBox(),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          controller.isShowAdditionalInfo(
-                            !controller.isShowAdditionalInfo(),
-                          );
-                        },
-                        child: Text(
-                          "Click To Close",
-                          style: TextStyle(
-                            color: colorScheme.outline,
-                            fontSize: 12,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  Obx(
-                    () => controller.isShowAdditionalInfo()
-                        ? Container(
-                            padding: const EdgeInsets.all(15),
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: colorScheme.outlineVariant,
-                              ),
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            child: Column(
-                              children: [
-                                _buildDetailRow(
-                                  "Created By :",
-                                  "${task.createdBy["displayName"]}",
-                                ),
-                                _buildDetailRow(
-                                  "Created On :",
-                                  DateFormat("d MMM y").format(task.createdAt),
-                                ),
-                                task.updatedAt == null
-                                    ? SizedBox()
-                                    : _buildDetailRow(
-                                        "Last Updated :",
-                                        DateFormat(
-                                          "d MMM y",
-                                        ).format(task.updatedAt!),
-                                      ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    const Text(
-                                      "Recurring Task :",
-                                      style: TextStyle(color: Colors.grey),
-                                    ),
-                                    Switch(
-                                      value: task.isRecurring,
-                                      activeThumbColor: Colors.white,
-                                      activeTrackColor: ColorScheme.of(
-                                        context,
-                                      ).primary,
-                                      onChanged: (bool value) {},
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          )
-                        : SizedBox(),
-                  ),
+
+                  // Tab Content
+                  Obx(() {
+                    if (controller.activeTabIndex.value == 0) {
+                      // Details Tab
+                      return _buildDetailsTab(
+                        task,
+                        colorScheme,
+                        context,
+                        controller,
+                      );
+                    } else {
+                      // Comments Tab
+                      return _buildCommentsTab(colorScheme);
+                    }
+                  }),
+
                   const SizedBox(height: 20),
 
-                  // Bottom Buttons
+                  // Bottom Buttons)
                   Row(
                     children: [
                       Expanded(
@@ -283,7 +153,255 @@ void taskDetailsDialog({
   );
 }
 
-// --- Helper Widgets ---
+// --- Details Tab ---
+Widget _buildDetailsTab(
+  TaskModel task,
+  ColorScheme colorScheme,
+  BuildContext context,
+  TaskDetailsDialogController controller,
+) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Row(
+        children: [
+          Expanded(
+            child: _buildInfoCard(
+              "Priority",
+              task.priority,
+              colorScheme,
+              isBadge: true,
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: _buildInfoCard(
+              "Due Date",
+              DateFormat("d MMM hh:mm a").format(task.dueDate),
+              colorScheme,
+            ),
+          ),
+        ],
+      ),
+      const SizedBox(height: 12),
+      Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: _buildInfoCard(
+              "Status",
+              task.status,
+              colorScheme,
+              hasIcon: true,
+            ),
+          ),
+        ],
+      ),
+      const SizedBox(height: 20),
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            "Description",
+            style: TextStyle(color: Colors.grey, fontSize: 12),
+          ),
+          const SizedBox(height: 4),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              border: Border.all(color: colorScheme.outlineVariant),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Text(
+              task.description,
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+          ),
+        ],
+      ),
+      const SizedBox(height: 10),
+      // Additional Details Section
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Obx(
+            () => controller.isShowAdditionalInfo()
+                ? const Text(
+                    "Additional Details",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  )
+                : const SizedBox(),
+          ),
+          TextButton(
+            onPressed: () {
+              controller.isShowAdditionalInfo(
+                !controller.isShowAdditionalInfo(),
+              );
+            },
+            child: Text(
+              "Click To Close",
+              style: TextStyle(color: colorScheme.outline, fontSize: 12),
+            ),
+          ),
+        ],
+      ),
+      const SizedBox(height: 10),
+      Obx(
+        () => controller.isShowAdditionalInfo()
+            ? Container(
+                padding: const EdgeInsets.all(15),
+                decoration: BoxDecoration(
+                  border: Border.all(color: colorScheme.outlineVariant),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Column(
+                  children: [
+                    _buildDetailRow(
+                      "Created By :",
+                      "${task.createdBy["displayName"]}",
+                    ),
+                    _buildDetailRow(
+                      "Created On :",
+                      DateFormat("d MMM y").format(task.createdAt),
+                    ),
+                    task.updatedAt == null
+                        ? const SizedBox()
+                        : _buildDetailRow(
+                            "Last Updated :",
+                            DateFormat("d MMM y").format(task.updatedAt!),
+                          ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          "Recurring Task :",
+                          style: TextStyle(color: Colors.grey),
+                        ),
+                        Switch(
+                          value: task.isRecurring,
+                          activeThumbColor: Colors.white,
+                          activeTrackColor: colorScheme.primary,
+                          onChanged: (bool value) {},
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              )
+            : const SizedBox(),
+      ),
+    ],
+  );
+}
+
+// --- Comments Tab ---
+Widget _buildCommentsTab(ColorScheme colorScheme) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      // Comments Header
+      const Text(
+        "Comments",
+        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+      ),
+      const SizedBox(height: 16),
+      //  Comment Section
+      TextFormField(
+        decoration: .new(
+          suffixStyle: .new(color: Colors.blueAccent),
+          hintText: "Write your comment...",
+          hintStyle: .new(height: 5, fontSize: 14),
+          suffixIcon: InkWell(
+            child: Icon(Icons.send_outlined, color: Colors.blueAccent),
+          ),
+        ),
+      ),
+      // Comments List
+      SizedBox(
+        height: 300,
+        child: ListView.separated(
+          itemCount: 10,
+          separatorBuilder: (context, index) => SizedBox(height: 10),
+          itemBuilder: (context, index) => _buildCommentCard(
+            name: "Priya Raval",
+            comment:
+                "I've started working on the wireframes. Will share updates soon.",
+            time: "May 20, 2025 at 9:42 AM",
+          ),
+        ),
+      ),
+
+      const SizedBox(height: 20),
+    ],
+  );
+}
+
+// --- Comment Card Widget ---
+Widget _buildCommentCard({
+  required String name,
+  required String comment,
+  required String time,
+}) {
+  return Container(
+    padding: const EdgeInsets.all(16),
+    decoration: BoxDecoration(
+      border: Border.all(color: Colors.grey.shade200),
+      borderRadius: BorderRadius.circular(12),
+      color: Colors.grey.shade50,
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            // User Avatar
+            Container(
+              width: 32,
+              height: 32,
+              decoration: BoxDecoration(
+                color: Colors.blue.shade100,
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Center(
+                child: Text(
+                  name.substring(0, 1),
+                  style: const TextStyle(
+                    color: Colors.blue,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    name,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
+                  ),
+                  Text(
+                    time,
+                    style: const TextStyle(color: Colors.grey, fontSize: 12),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        Text(comment, style: const TextStyle(fontSize: 14, height: 1.4)),
+      ],
+    ),
+  );
+}
+
+// --- Helper Widgets  ---
 
 Widget _buildTab(String label, bool isActive, VoidCallback onTap) {
   return GestureDetector(

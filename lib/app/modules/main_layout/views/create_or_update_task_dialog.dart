@@ -5,25 +5,34 @@ import 'package:task_manager_firebase/app/modules/auth/controllers/auth_controll
 import 'package:task_manager_firebase/app/modules/home/data/models/task_model.dart';
 import 'package:task_manager_firebase/app/modules/main_layout/controllers/create_task_controller.dart';
 import 'package:task_manager_firebase/app/modules/main_layout/controllers/create_task_dialog_controller.dart';
+import 'package:task_manager_firebase/app/modules/main_layout/controllers/update_task_controller.dart';
 import 'package:task_manager_firebase/app/services/firebase_services.dart';
 
-void createOrUpdateTaskDialog({required BuildContext context,bool isUpdate = false,TaskModel? task }) {
+void createOrUpdateTaskDialog({
+  required BuildContext context,
+  bool isUpdate = false,
+  TaskModel? task,
+}) {
   final CreateTaskDialogController dialogController = Get.put(
     CreateTaskDialogController(),
   );
 
-  if(isUpdate){
+  if (isUpdate) {
     dialogController.titleController.text = task!.title;
     dialogController.descriptionController.text = task.description;
     dialogController.dueDateController.text = task.dueDate.toString();
     dialogController.endDateController.text = task.endDate.toString();
     dialogController.tagsController.text = task.tags.toString();
-  }else{
+  } else {
     dialogController.clearFields();
   }
 
   final CreateTaskController createTaskController = Get.put(
     CreateTaskController(),
+  );
+
+  final UpdateTaskController updateTaskController = Get.put(
+    UpdateTaskController(),
   );
 
   final AuthController authController = Get.put(AuthController());
@@ -62,8 +71,8 @@ void createOrUpdateTaskDialog({required BuildContext context,bool isUpdate = fal
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Text(
-                              "Create New Task",
+                            Text(
+                              isUpdate ? "Update Task" : "Create New Task",
                               style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
@@ -217,77 +226,142 @@ void createOrUpdateTaskDialog({required BuildContext context,bool isUpdate = fal
                                               .validate()) {
                                             return;
                                           }
-                                          bool
-                                          success = await createTaskController
-                                              .createTask(
-                                                task: TaskModel(
-                                                  createdAt: DateTime.now(),
-                                                  isRecurring: dialogController
-                                                      .isRecurring
-                                                      .value,
-                                                  createdBy: {
-                                                    "uid": FirebaseServices
-                                                        .auth
-                                                        .currentUser!
-                                                        .uid,
-                                                    "displayName":
-                                                        FirebaseServices
-                                                            .auth
-                                                            .currentUser!
-                                                            .displayName
-                                                            .toString(),
-                                                    "email": FirebaseServices
-                                                        .auth
-                                                        .currentUser!
-                                                        .email
-                                                        .toString(),
-                                                    "photoURL": FirebaseServices
-                                                        .auth
-                                                        .currentUser!
-                                                        .photoURL
-                                                        .toString(),
-                                                  },
-                                                  title: dialogController
-                                                      .titleController
-                                                      .text
-                                                      .trim(),
-                                                  description: dialogController
-                                                      .descriptionController
-                                                      .text
-                                                      .trim(),
-                                                  dueDate: dialogController
-                                                      .selectedDueDate
-                                                      .value!,
-                                                  priority: dialogController
-                                                      .selectedPriority
-                                                      .value,
-                                                  status: dialogController
-                                                      .selectedStatus
-                                                      .value,
-                                                  tags: [
-                                                    dialogController
-                                                        .tagsController
+                                          bool success = isUpdate
+                                              ? await updateTaskController.updateTask(
+                                                  task: TaskModel(
+                                                    id: task?.id,
+                                                    createdAt: DateTime.now(),
+                                                    isRecurring:
+                                                        dialogController
+                                                            .isRecurring
+                                                            .value,
+                                                    createdBy: {
+                                                      "uid": FirebaseServices
+                                                          .auth
+                                                          .currentUser!
+                                                          .uid,
+                                                      "displayName":
+                                                          FirebaseServices
+                                                              .auth
+                                                              .currentUser!
+                                                              .displayName
+                                                              .toString(),
+                                                      "email": FirebaseServices
+                                                          .auth
+                                                          .currentUser!
+                                                          .email
+                                                          .toString(),
+                                                      "photoURL":
+                                                          FirebaseServices
+                                                              .auth
+                                                              .currentUser!
+                                                              .photoURL
+                                                              .toString(),
+                                                    },
+                                                    title: dialogController
+                                                        .titleController
                                                         .text
                                                         .trim(),
-                                                  ],
-                                                  frequency: dialogController
-                                                      .selectedFrequency
-                                                      .value,
-                                                  endDate: dialogController
-                                                      .selectedEndDate
-                                                      .value,
-                                                ),
-                                              );
+                                                    description: dialogController
+                                                        .descriptionController
+                                                        .text
+                                                        .trim(),
+                                                    dueDate: dialogController
+                                                        .selectedDueDate
+                                                        .value!,
+                                                    priority: dialogController
+                                                        .selectedPriority
+                                                        .value,
+                                                    status: dialogController
+                                                        .selectedStatus
+                                                        .value,
+                                                    tags: [
+                                                      dialogController
+                                                          .tagsController
+                                                          .text
+                                                          .trim(),
+                                                    ],
+                                                    frequency: dialogController
+                                                        .selectedFrequency
+                                                        .value,
+                                                    endDate: dialogController
+                                                        .selectedEndDate
+                                                        .value,
+                                                  ),
+                                                )
+                                              : await createTaskController.createTask(
+                                                  task: TaskModel(
+                                                    createdAt: DateTime.now(),
+                                                    isRecurring:
+                                                        dialogController
+                                                            .isRecurring
+                                                            .value,
+                                                    createdBy: {
+                                                      "uid": FirebaseServices
+                                                          .auth
+                                                          .currentUser!
+                                                          .uid,
+                                                      "displayName":
+                                                          FirebaseServices
+                                                              .auth
+                                                              .currentUser!
+                                                              .displayName
+                                                              .toString(),
+                                                      "email": FirebaseServices
+                                                          .auth
+                                                          .currentUser!
+                                                          .email
+                                                          .toString(),
+                                                      "photoURL":
+                                                          FirebaseServices
+                                                              .auth
+                                                              .currentUser!
+                                                              .photoURL
+                                                              .toString(),
+                                                    },
+                                                    title: dialogController
+                                                        .titleController
+                                                        .text
+                                                        .trim(),
+                                                    description: dialogController
+                                                        .descriptionController
+                                                        .text
+                                                        .trim(),
+                                                    dueDate: dialogController
+                                                        .selectedDueDate
+                                                        .value!,
+                                                    priority: dialogController
+                                                        .selectedPriority
+                                                        .value,
+                                                    status: dialogController
+                                                        .selectedStatus
+                                                        .value,
+                                                    tags: [
+                                                      dialogController
+                                                          .tagsController
+                                                          .text
+                                                          .trim(),
+                                                    ],
+                                                    frequency: dialogController
+                                                        .selectedFrequency
+                                                        .value,
+                                                    endDate: dialogController
+                                                        .selectedEndDate
+                                                        .value,
+                                                  ),
+                                                );
                                           if (success) {
                                             Get.back();
                                             Get.snackbar(
                                               "Success",
-                                              "Task created successfully",
+                                              "Task ${isUpdate ? "Updated" : "Created"} successfully",
                                             );
                                           }
                                         },
 
-                                  child: createTaskController.isLoading.value
+                                  child:
+                                      (createTaskController.isLoading.value ||
+                                          updateTaskController.isLoading.value)
                                       ? const SizedBox(
                                           height: 18,
                                           width: 18,
@@ -296,7 +370,11 @@ void createOrUpdateTaskDialog({required BuildContext context,bool isUpdate = fal
                                             color: Colors.white,
                                           ),
                                         )
-                                      : const Text("Create Task"),
+                                      : Text(
+                                          isUpdate
+                                              ? "Update Task"
+                                              : "Create Task",
+                                        ),
                                 ),
                               ),
                             ),

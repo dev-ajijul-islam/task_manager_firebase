@@ -11,7 +11,7 @@ class TaskCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        taskDetailsDialog(context: context,task: task);
+        taskDetailsDialog(context: context, task: task);
       },
       child: Card(
         color: Colors.white,

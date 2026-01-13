@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:task_manager_firebase/app/modules/auth/data/models/user_model.dart';
+import 'package:task_manager_firebase/app/modules/home/controllers/comments_controller.dart';
 import 'package:task_manager_firebase/app/modules/home/controllers/task_details_dialog_controller.dart';
+import 'package:task_manager_firebase/app/modules/home/data/models/comment_model.dart';
 import 'package:task_manager_firebase/app/modules/home/data/models/task_model.dart';
 import 'package:task_manager_firebase/app/modules/main_layout/views/create_or_update_task_dialog.dart';
+import 'package:task_manager_firebase/app/services/firebase_services.dart';
+
+final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
 void taskDetailsDialog({
   required BuildContext context,
@@ -11,7 +17,11 @@ void taskDetailsDialog({
 }) {
   final controller = Get.put(TaskDetailsDialogController());
   final colorScheme = Theme.of(context).colorScheme;
+  final CommentsController commentsController = Get.put(CommentsController());
 
+  commentsController.taskModel = task;
+
+  commentsController.loadComments();
   showGeneralDialog(
     context: context,
     barrierDismissible: true,
@@ -103,7 +113,11 @@ void taskDetailsDialog({
                       );
                     } else {
                       // Comments Tab
-                      return _buildCommentsTab(colorScheme);
+                      return _buildCommentsTab(
+                        colorScheme,
+                        taskModel: task,
+                        commentsController: commentsController,
+                      );
                     }
                   }),
 
@@ -303,24 +317,61 @@ Widget _buildDetailsTab(
 }
 
 // --- Comments Tab ---
-Widget _buildCommentsTab(ColorScheme colorScheme) {
+Widget _buildCommentsTab(
+  ColorScheme colorScheme, {
+  required TaskModel taskModel,
+  required commentsController,
+}) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       // Comments Header
-      const Text(
-        "Comments",
+      Text(
+        "Comments (${commentsController.comments.length})",
         style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
       ),
       const SizedBox(height: 16),
       //  Comment Section
-      TextFormField(
-        decoration: .new(
-          suffixStyle: .new(color: Colors.blueAccent),
-          hintText: "Write your comment...",
-          hintStyle: .new(height: 5, fontSize: 14),
-          suffixIcon: InkWell(
-            child: Icon(Icons.send_outlined, color: Colors.blueAccent),
+      Form(
+        key: formKey,
+        child: TextFormField(
+          controller: commentsController.commentTEController,
+          validator: (value) {
+            if (value!.isEmpty) {
+              return "Enter your comment";
+            }
+            return null;
+          },
+          decoration: .new(
+            suffixStyle: .new(color: Colors.blueAccent),
+            hintText: "Write your comment...",
+            hintStyle: .new(height: 5, fontSize: 14),
+            suffixIcon: InkWell(
+              onTap: () {
+                if (formKey.currentState!.validate()) {
+                  commentsController.createComment(
+                    CommentModel(
+                      user: UserModel(
+                        uid: FirebaseServices.auth.currentUser!.uid,
+                        displayName: FirebaseServices
+                            .auth
+                            .currentUser!
+                            .displayName
+                            .toString(),
+                        email: FirebaseServices.auth.currentUser!.email
+                            .toString(),
+                        photoURL: FirebaseServices.auth.currentUser!.photoURL
+                            .toString(),
+                      ),
+                      comment: commentsController.commentTEController.text.trim(),
+                      commentedAt: DateTime.now(),
+                      taskId: taskModel.id.toString(),
+                    ),
+                  );
+                }
+              },
+              child: Icon(Icons.send_outlined, color: Colors.blueAccent),
+            ),
           ),
         ),
       ),
@@ -328,14 +379,12 @@ Widget _buildCommentsTab(ColorScheme colorScheme) {
       SizedBox(
         height: 300,
         child: ListView.separated(
-          itemCount: 10,
+          itemCount: commentsController.comments.length,
           separatorBuilder: (context, index) => SizedBox(height: 10),
-          itemBuilder: (context, index) => _buildCommentCard(
-            name: "Priya Raval",
-            comment:
-                "I've started working on the wireframes. Will share updates soon.",
-            time: "May 20, 2025 at 9:42 AM",
-          ),
+          itemBuilder: (context, index) {
+            final comments = commentsController.comments[index];
+            return _buildCommentCard(comment: comments);
+          },
         ),
       ),
 
@@ -345,11 +394,7 @@ Widget _buildCommentsTab(ColorScheme colorScheme) {
 }
 
 // --- Comment Card Widget ---
-Widget _buildCommentCard({
-  required String name,
-  required String comment,
-  required String time,
-}) {
+Widget _buildCommentCard({required CommentModel comment}) {
   return Container(
     padding: const EdgeInsets.all(16),
     decoration: BoxDecoration(
@@ -363,22 +408,10 @@ Widget _buildCommentCard({
         Row(
           children: [
             // User Avatar
-            Container(
-              width: 32,
-              height: 32,
-              decoration: BoxDecoration(
-                color: Colors.blue.shade100,
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Center(
-                child: Text(
-                  name.substring(0, 1),
-                  style: const TextStyle(
-                    color: Colors.blue,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
+            CircleAvatar(
+              backgroundImage: comment.user.photoURL == "null"
+                  ? AssetImage("assets/images/dummy_profile.png")
+                  : NetworkImage(comment.user.photoURL.toString()),
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -386,14 +419,14 @@ Widget _buildCommentCard({
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    name,
+                    comment.user.displayName,
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 14,
                     ),
                   ),
                   Text(
-                    time,
+                    DateFormat("d MMM y h m a").format(comment.commentedAt),
                     style: const TextStyle(color: Colors.grey, fontSize: 12),
                   ),
                 ],
@@ -402,7 +435,10 @@ Widget _buildCommentCard({
           ],
         ),
         const SizedBox(height: 12),
-        Text(comment, style: const TextStyle(fontSize: 14, height: 1.4)),
+        Text(
+          comment.comment,
+          style: const TextStyle(fontSize: 14, height: 1.4),
+        ),
       ],
     ),
   );

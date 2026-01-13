@@ -17,7 +17,7 @@ class ActiveTaskController extends GetxController {
         .listen(
           (snapshot) {
             activeTasks.value = snapshot.docs
-                .map((doc) => TaskModel.fromJson(doc.data()))
+                .map((doc) => TaskModel.fromJson({...doc.data(), "id": doc.id}))
                 .toList();
             isLoading.value = false;
           },

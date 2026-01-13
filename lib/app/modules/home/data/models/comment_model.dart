@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:task_manager_firebase/app/modules/auth/data/models/user_model.dart';
 
 class CommentModel {
@@ -17,7 +18,7 @@ class CommentModel {
     return CommentModel(
       user: UserModel.fromJson(json["user"]),
       comment: json["comment"],
-      commentedAt: json["commentedAt"],
+      commentedAt: (json["commentedAt"] as Timestamp).toDate(),
       taskId: json["taskId"],
     );
   }

@@ -35,7 +35,7 @@ class TaskModel {
 
   factory TaskModel.fromJson(Map<String, dynamic> json) {
     return TaskModel(
-      id: json["uid"],
+      id: json["id"],
       isRecurring: json["isRecurring"],
       createdAt: (json["createdAt"] as Timestamp).toDate(),
       createdBy: json["createdBy"],

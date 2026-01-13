@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:task_manager_firebase/app/modules/main_layout/controllers/layout_controller.dart';
-import 'package:task_manager_firebase/app/modules/main_layout/views/create_task_dialog.dart';
+import 'package:task_manager_firebase/app/modules/main_layout/views/create_or_update_task_dialog.dart';
 import 'package:task_manager_firebase/app/modules/home/views/topbar_widget.dart';
 
 class MainLayout extends StatelessWidget {
@@ -19,7 +19,7 @@ class MainLayout extends StatelessWidget {
         heroTag: "add task fab",
         shape: RoundedRectangleBorder(borderRadius: .circular(100)),
         onPressed: () {
-          createTaskDialog(context: context);
+          createOrUpdateTaskDialog(context: context);
         },
         child: Icon(Icons.add_circle_outline, size: 30),
       ),

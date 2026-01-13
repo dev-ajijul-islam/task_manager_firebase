@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:task_manager_firebase/app/modules/home/controllers/task_details_dialog_controller.dart';
 import 'package:task_manager_firebase/app/modules/home/data/models/task_model.dart';
+import 'package:task_manager_firebase/app/modules/main_layout/views/create_or_update_task_dialog.dart';
 
 void taskDetailsDialog({
   required BuildContext context,
@@ -45,21 +46,27 @@ void taskDetailsDialog({
                           ),
                         ),
                       ),
-                      Container(
-                        width: 80,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: Colors.grey),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: const [
-                            Icon(Icons.edit_calendar_outlined, size: 18),
-                            SizedBox(width: 5),
-                            Text("Edit"),
-                          ],
+                      GestureDetector(
+                        onTap: () {
+                          Get.back();
+                          createOrUpdateTaskDialog(context: context);
+                        },
+                        child: Container(
+                          width: 80,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(color: Colors.grey),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: const [
+                              Icon(Icons.edit_calendar_outlined, size: 18),
+                              SizedBox(width: 5),
+                              Text("Edit"),
+                            ],
+                          ),
                         ),
                       ),
                     ],

@@ -6,6 +6,7 @@ import 'package:task_manager_firebase/app/modules/home/controllers/comments_cont
 import 'package:task_manager_firebase/app/modules/home/controllers/task_details_dialog_controller.dart';
 import 'package:task_manager_firebase/app/modules/home/data/models/comment_model.dart';
 import 'package:task_manager_firebase/app/modules/home/data/models/task_model.dart';
+import 'package:task_manager_firebase/app/modules/main_layout/controllers/delete_task_controller.dart';
 import 'package:task_manager_firebase/app/modules/main_layout/views/create_or_update_task_dialog.dart';
 import 'package:task_manager_firebase/app/services/firebase_services.dart';
 
@@ -18,6 +19,9 @@ void taskDetailsDialog({
   final controller = Get.put(TaskDetailsDialogController());
   final colorScheme = Theme.of(context).colorScheme;
   final CommentsController commentsController = Get.put(CommentsController());
+  final DeleteTaskController deleteTaskController = Get.put(
+    DeleteTaskController(),
+  );
 
   commentsController.taskModel = task;
 
@@ -56,32 +60,76 @@ void taskDetailsDialog({
                           ),
                         ),
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          Get.back();
-                          createOrUpdateTaskDialog(
-                            context: context,
-                            isUpdate: true,
-                            task: task
-                          );
-                        },
-                        child: Container(
-                          width: 80,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(color: Colors.grey),
+                      Row(
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              Get.back();
+                              createOrUpdateTaskDialog(
+                                context: context,
+                                isUpdate: true,
+                                task: task,
+                              );
+                            },
+                            child: Container(
+                              width: 80,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(color: Colors.grey),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: const [
+                                  Icon(Icons.edit_calendar_outlined, size: 18),
+                                  SizedBox(width: 5),
+                                  Text("Edit"),
+                                ],
+                              ),
+                            ),
                           ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: const [
-                              Icon(Icons.edit_calendar_outlined, size: 18),
-                              SizedBox(width: 5),
-                              Text("Edit"),
-                            ],
+                          IconButton(
+                            color: Colors.red,
+                            onPressed: () {
+                              Get.dialog(
+                                AlertDialog(
+                                  backgroundColor: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: .circular(10),
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Get.back();
+                                      },
+                                      child: Text("Cancel"),
+                                    ),
+                                    Obx(
+                                      () => IconButton(
+                                        color: Colors.red,
+                                        onPressed: () {
+                                          deleteTaskController.deleteTask(
+                                            taskId: task.id.toString(),
+                                          );
+                                        },
+                                        icon:
+                                            deleteTaskController.isLoading.value
+                                            ? SizedBox(width: 15,height: 15, child: CircularProgressIndicator())
+                                            : Icon(Icons.delete),
+                                      ),
+                                    ),
+                                  ],
+                                  title: Text("Delete"),
+                                  content: Text(
+                                    "Do you want to delete ${task.title}",
+                                  ),
+                                ),
+                              );
+                            },
+                            icon: Icon(Icons.delete_outline),
                           ),
-                        ),
+                        ],
                       ),
                     ],
                   ),
@@ -96,7 +144,7 @@ void taskDetailsDialog({
                         ),
                         const SizedBox(width: 10),
                         _buildTab(
-                          "Comments(2)",
+                          "Comments",
                           controller.activeTabIndex.value == 1,
                           () => controller.changeTab(1),
                         ),

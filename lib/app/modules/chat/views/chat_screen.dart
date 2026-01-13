@@ -22,34 +22,37 @@ class ChatScreen extends StatelessWidget {
         label: Text("New"),
         icon: const Icon(Icons.message_outlined),
       ),
-      body: Obx(() {
-        if (chatController.isLoading.value) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
-        if (chatController.conversations.isEmpty) {
-          return const Center(child: Text("No conversations yet."));
-        }
-
-        return Column(
-          children: [
-            SizedBox(height: 15),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-              child: Row(
-                spacing: 10,
-                children: [
-                  Icon(Icons.message_outlined),
-                  Text(
-                    "Chats",
-                    style: TextTheme.of(
-                      context,
-                    ).titleLarge?.copyWith(fontWeight: .bold),
-                  ),
-                ],
-              ),
+      body: Column(
+        children: [
+          SizedBox(height: 15),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+            child: Row(
+              spacing: 10,
+              children: [
+                Icon(Icons.message_outlined),
+                Text(
+                  "Chats",
+                  style: TextTheme.of(
+                    context,
+                  ).titleLarge?.copyWith(fontWeight: .bold),
+                ),
+              ],
             ),
-            Expanded(
+          ),
+          Obx(() {
+            if (chatController.isLoading.value) {
+              return Expanded(
+                child: Center(child: CircularProgressIndicator()),
+              );
+            }
+
+            if (chatController.conversations.isEmpty) {
+              return Expanded(
+                child: Center(child: Text("No Conversation found")),
+              );
+            }
+            return Expanded(
               child: ListView.separated(
                 itemCount: chatController.conversations.length,
                 separatorBuilder: (_, _) => const SizedBox(height: 10),
@@ -90,10 +93,10 @@ class ChatScreen extends StatelessWidget {
                   );
                 },
               ),
-            ),
-          ],
-        );
-      }),
+            );
+          }),
+        ],
+      ),
     );
   }
 }

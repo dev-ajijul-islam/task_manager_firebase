@@ -4,6 +4,7 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
 import 'package:task_manager_firebase/app/modules/calender/controllers/calender_controller.dart';
 import 'package:task_manager_firebase/app/modules/home/views/task_details_dialog.dart';
+import 'package:task_manager_firebase/app/routes/app_routes.dart';
 
 class CalenderScreen extends StatelessWidget {
   CalenderScreen({super.key});
@@ -39,7 +40,12 @@ class CalenderScreen extends StatelessWidget {
               style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
           ),
-          const Icon(Icons.search_outlined),
+          IconButton(
+            onPressed: () {
+              Get.toNamed(AppRoutes.searchScreen);
+            },
+            icon: Icon(Icons.search_outlined),
+          ),
         ],
       ),
     );

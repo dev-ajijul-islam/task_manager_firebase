@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:task_manager_firebase/app/routes/app_routes.dart';
 import 'package:task_manager_firebase/app/services/firebase_services.dart';
 
 class TopbarWidget extends StatelessWidget {
@@ -65,7 +67,9 @@ class TopbarWidget extends StatelessWidget {
               Row(
                 children: [
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Get.toNamed(AppRoutes.searchScreen);
+                    },
                     icon: Icon(
                       Icons.search_outlined,
                       size: 25,

@@ -5,4 +5,5 @@ class AppRoutes {
   static const signInScreen = "/sign-in-screen";
   static const signUpScreen = "/sign-up-screen";
   static const chatDetails = "/chat-details-screen";
+  static const searchScreen = "/search-task";
 }

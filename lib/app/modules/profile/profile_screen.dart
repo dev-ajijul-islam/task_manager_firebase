@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:task_manager_firebase/app/modules/auth/controllers/auth_controller.dart';
+import 'package:task_manager_firebase/app/modules/main_layout/controllers/active_task_controller.dart';
+import 'package:task_manager_firebase/app/modules/main_layout/controllers/complete_task_controller.dart';
 import 'package:task_manager_firebase/app/services/firebase_services.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -9,6 +11,14 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AuthController authController = Get.put(AuthController());
+
+    final ActiveTaskController activeTaskController = Get.put(
+      ActiveTaskController(),
+    );
+    final CompleteTaskController completeTaskController = Get.put(
+      CompleteTaskController(),
+    );
+
     return Scaffold(
       backgroundColor: const Color(0xFFE8F6F6),
       body: SafeArea(
@@ -80,9 +90,15 @@ class ProfileScreen extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Row(
                   children: [
-                    _StatCard(title: "Tasks Completed", value: "140"),
+                    _StatCard(
+                      title: "Tasks Completed",
+                      value: "${completeTaskController.completedTasks.length}",
+                    ),
                     const SizedBox(width: 12),
-                    _StatCard(title: "Tasks Pending", value: "15"),
+                    _StatCard(
+                      title: "Tasks Pending",
+                      value: "${activeTaskController.activeTasks.length}",
+                    ),
                   ],
                 ),
               ),

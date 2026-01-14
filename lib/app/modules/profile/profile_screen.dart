@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:task_manager_firebase/app/modules/auth/controllers/auth_controller.dart';
 import 'package:task_manager_firebase/app/modules/main_layout/controllers/active_task_controller.dart';
 import 'package:task_manager_firebase/app/modules/main_layout/controllers/complete_task_controller.dart';
+import 'package:task_manager_firebase/app/modules/profile/controllers/notifications_controller.dart';
 import 'package:task_manager_firebase/app/services/firebase_services.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -122,21 +123,6 @@ class ProfileScreen extends StatelessWidget {
                       title: "Notifications",
                     ),
                     _Divider(),
-                    _MenuTile(
-                      icon: Icons.settings_outlined,
-                      title: "App Settings",
-                    ),
-
-                    const SizedBox(height: 28),
-
-                    _SectionTitle("Support & Information"),
-                    _MenuTile(
-                      icon: Icons.privacy_tip_outlined,
-                      title: "Privacy Policy",
-                    ),
-                    _Divider(),
-                    _MenuTile(icon: Icons.help_outline, title: "FAQs"),
-
                     const SizedBox(height: 28),
 
                     _SectionTitle("Account Management"),
@@ -153,20 +139,24 @@ class ProfileScreen extends StatelessWidget {
                         onTap: () {
                           Get.dialog(
                             AlertDialog(
-                              shape: RoundedRectangleBorder(borderRadius: .circular(10)),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: .circular(10),
+                              ),
                               backgroundColor: Colors.white,
                               title: Row(
                                 mainAxisAlignment: .spaceBetween,
                                 children: [
                                   Text("Log Out"),
-                                  IconButton(onPressed: () {
-                                    Get.back();
-                                  }, icon: Icon(Icons.clear))
+                                  IconButton(
+                                    onPressed: () {
+                                      Get.back();
+                                    },
+                                    icon: Icon(Icons.clear),
+                                  ),
                                 ],
                               ),
                               content: Text("Do you want to logout?"),
                               actions: [
-                        
                                 FilledButton(
                                   onPressed: () {
                                     authController.signOut();
@@ -263,6 +253,9 @@ class _MenuTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final NotificationsController notificationsController = Get.put(
+      NotificationsController(),
+    );
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12),
       child: Row(
@@ -270,7 +263,16 @@ class _MenuTile extends StatelessWidget {
           Icon(icon),
           const SizedBox(width: 14),
           Expanded(child: Text(title, style: const TextStyle(fontSize: 16))),
-          const Icon(Icons.chevron_right),
+          title == "Notifications"
+              ? Obx(
+                  () => Switch(
+                    value: notificationsController.isEnabled.value,
+                    onChanged: (value) {
+                      notificationsController.toggleNotification(value);
+                    },
+                  ),
+                )
+              : Icon(Icons.chevron_right),
         ],
       ),
     );

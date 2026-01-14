@@ -60,7 +60,8 @@ class ResetPasswordScreen extends StatelessWidget {
                           children: [
                             const Text("Old Password"),
                             TextFormField(
-                              controller: resetPasswordController.oldPasswordController,
+                              controller:
+                                  resetPasswordController.oldPasswordController,
                               obscureText: true,
                               decoration: const InputDecoration(
                                 hintText: "Enter your password",
@@ -77,7 +78,8 @@ class ResetPasswordScreen extends StatelessWidget {
                             ),
                             const Text("New Password"),
                             TextFormField(
-                              controller:resetPasswordController.newPasswordController,
+                              controller:
+                                  resetPasswordController.newPasswordController,
                               obscureText: true,
                               decoration: const InputDecoration(
                                 hintText: "Enter your password",
@@ -94,13 +96,17 @@ class ResetPasswordScreen extends StatelessWidget {
                             ),
                             const Text("Confirm New Password"),
                             TextFormField(
-                              controller: resetPasswordController.confirmNewPasswordController,
+                              controller: resetPasswordController
+                                  .confirmNewPasswordController,
                               obscureText: true,
                               decoration: const InputDecoration(
                                 hintText: "Enter your password",
                               ),
                               validator: (value) {
-                                if (resetPasswordController.newPasswordController.text != value) {
+                                if (resetPasswordController
+                                        .newPasswordController
+                                        .text !=
+                                    value) {
                                   return "Password is not matched";
                                 }
                                 return null;

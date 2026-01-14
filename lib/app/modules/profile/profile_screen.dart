@@ -47,8 +47,12 @@ class ProfileScreen extends StatelessWidget {
                         CircleAvatar(
                           radius: 30,
                           backgroundImage: snapshot.data?.photoURL != null
-                              ? NetworkImage(snapshot.data!.photoURL.toString())
-                              : AssetImage("assets/images/dummy_profile.png"),
+                              ? NetworkImage(
+                                  snapshot.data!.photoURL.toString(),
+                                )
+                              : AssetImage(
+                                  "assets/images/dummy_profile.png",
+                                ),
                         ),
                         const SizedBox(width: 14),
                         Column(
@@ -77,7 +81,9 @@ class ProfileScreen extends StatelessWidget {
                         const Spacer(),
                         IconButton(
                           icon: const Icon(Icons.edit_outlined),
-                          onPressed: () {},
+                          onPressed: () {
+                            Get.toNamed(AppRoutes.updateProfileScreen);
+                          },
                         ),
                       ],
                     );

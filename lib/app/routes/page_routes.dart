@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:task_manager_firebase/app/modules/auth/views/reset_password_screen.dart';
 import 'package:task_manager_firebase/app/modules/auth/views/sign_in_screen.dart';
 import 'package:task_manager_firebase/app/modules/auth/views/sign_up_screen.dart';
+import 'package:task_manager_firebase/app/modules/auth/views/update_profile_screen.dart';
 import 'package:task_manager_firebase/app/modules/chat/views/chat_details.dart';
 import 'package:task_manager_firebase/app/modules/on_start/views/splash_screen.dart';
 import 'package:task_manager_firebase/app/modules/on_start/views/welcome_screen.dart';
@@ -22,5 +23,6 @@ class PageRoutes {
       name: AppRoutes.resetPasswordScreen,
       page: () => ResetPasswordScreen(),
     ),
+    GetPage(name: AppRoutes.updateProfileScreen, page: () => UpdateProfileScreen(),)
   ];
 }

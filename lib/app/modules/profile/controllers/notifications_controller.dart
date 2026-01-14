@@ -14,6 +14,7 @@ Future<void> bgHandler(RemoteMessage message) async {
 
 class NotificationsController extends GetxController {
   RxBool isEnabled = false.obs;
+
   final GetStorage box = GetStorage();
 
   @override
@@ -24,6 +25,8 @@ class NotificationsController extends GetxController {
       _initFCM();
     }
   }
+
+
 
   void toggleNotification(bool value) {
     isEnabled.value = value;

@@ -30,7 +30,7 @@ Future<void> createNotification(RemoteMessage message) async {
 class NotificationsController extends GetxController {
   RxBool isEnabled = true.obs;
   RxList<NotificationModel> notifications = <NotificationModel>[].obs;
-
+  RxBool isLoading = true.obs;
   final GetStorage box = GetStorage();
 
   @override
@@ -38,8 +38,8 @@ class NotificationsController extends GetxController {
     super.onInit();
     isEnabled.value = box.read("isEnabled") ?? false;
     if (isEnabled.value) {
-      _initFCM();
       _loadNotifications();
+      _initFCM();
     }
   }
 
@@ -47,11 +47,15 @@ class NotificationsController extends GetxController {
     FirebaseServices.firestore
         .collection("notifications")
         .where("userId", isEqualTo: FirebaseServices.auth.currentUser?.uid)
+        .orderBy("createdAt", descending: true)
         .snapshots()
         .listen(
-          (snapshot) => snapshot.docs.map(
-            (doc) => notifications.add(NotificationModel.fromJson(doc.data())),
-          ),
+          (snapshot) {
+            notifications.value = snapshot.docs
+                .map((doc) => NotificationModel.fromJson(doc.data()))
+                .toList();
+            isLoading.value = false;
+          },
         );
   }
 

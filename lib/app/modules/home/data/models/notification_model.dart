@@ -14,10 +14,12 @@ class NotificationModel {
   });
 
   factory NotificationModel.fromJson(Map<String, dynamic> json) {
+    final Timestamp timestamp = json["createdAt"];
+
     return NotificationModel(
       title: json["title"],
       text: json["text"],
-      createdAt: (["createdAt"] as Timestamp).toDate(),
+      createdAt: timestamp.toDate(),
       userId: json["userId"],
     );
   }
@@ -26,7 +28,7 @@ class NotificationModel {
     return {
       "title": title,
       "text": text,
-      "createdAt": createdAt,
+      "createdAt": Timestamp.fromDate(createdAt),
       "userId": userId,
     };
   }

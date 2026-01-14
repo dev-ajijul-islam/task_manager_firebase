@@ -3,6 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
+
+@pragma('vm:entry-point')
 Future<void> bgHandler(RemoteMessage message) async {
   debugPrint("Background message received:");
   debugPrint("Title: ${message.notification?.title}");

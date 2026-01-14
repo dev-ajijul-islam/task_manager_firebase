@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:task_manager_firebase/app/modules/auth/views/reset_password_screen.dart';
 import 'package:task_manager_firebase/app/modules/auth/views/sign_in_screen.dart';
 import 'package:task_manager_firebase/app/modules/auth/views/sign_up_screen.dart';
 import 'package:task_manager_firebase/app/modules/chat/views/chat_details.dart';
@@ -16,6 +17,10 @@ class PageRoutes {
     GetPage(name: AppRoutes.chatDetails, page: () => ChatDetailsScreen()),
     GetPage(name: AppRoutes.signInScreen, page: () => SignInScreen()),
     GetPage(name: AppRoutes.signUpScreen, page: () => SignUpScreen()),
-    GetPage(name: AppRoutes.searchScreen, page:() =>  SearchScreen())
+    GetPage(name: AppRoutes.searchScreen, page: () => SearchScreen()),
+    GetPage(
+      name: AppRoutes.resetPasswordScreen,
+      page: () => ResetPasswordScreen(),
+    ),
   ];
 }

@@ -13,7 +13,7 @@ Future<void> bgHandler(RemoteMessage message) async {
 }
 
 class NotificationsController extends GetxController {
-  RxBool isEnabled = true.obs;
+  RxBool isEnabled = false.obs;
   final GetStorage box = GetStorage();
 
   @override
@@ -26,10 +26,10 @@ class NotificationsController extends GetxController {
   }
 
   void toggleNotification(bool value) {
+    isEnabled.value = value;
+    box.write("isEnabled", value);
     if (value) {
       _initFCM();
-      isEnabled.value = value;
-      box.write("isEnabled", value);
     } else {
       FirebaseMessaging.instance.unsubscribeFromTopic("all");
       isEnabled.value = false;
@@ -37,17 +37,16 @@ class NotificationsController extends GetxController {
   }
 
   void _initFCM() async {
-    NotificationSettings settings = await FirebaseMessaging.instance
-        .requestPermission(
-          alert: true,
-          announcement: true,
-          badge: true,
-          carPlay: true,
-          criticalAlert: true,
-          provisional: true,
-          sound: true,
-          providesAppNotificationSettings: true,
-        );
+    NotificationSettings settings = await FirebaseMessaging.instance.requestPermission(
+      alert: true,
+      announcement: true,
+      badge: true,
+      carPlay: true,
+      criticalAlert: true,
+      provisional: true,
+      sound: true,
+      providesAppNotificationSettings: true,
+    );
 
     if (settings.authorizationStatus != AuthorizationStatus.authorized &&
         settings.authorizationStatus != AuthorizationStatus.provisional) {
@@ -59,9 +58,7 @@ class NotificationsController extends GetxController {
     await FirebaseMessaging.instance.subscribeToTopic("all");
 
     FirebaseMessaging.onMessage.listen((message) => _handleMessage(message));
-    FirebaseMessaging.onMessageOpenedApp.listen(
-      (message) => _handleMessage(message),
-    );
+    FirebaseMessaging.onMessageOpenedApp.listen((message) => _handleMessage(message));
     FirebaseMessaging.onBackgroundMessage(bgHandler);
   }
 

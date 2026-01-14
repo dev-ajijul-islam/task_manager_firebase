@@ -4,6 +4,7 @@ import 'package:task_manager_firebase/app/modules/auth/controllers/auth_controll
 import 'package:task_manager_firebase/app/modules/main_layout/controllers/active_task_controller.dart';
 import 'package:task_manager_firebase/app/modules/main_layout/controllers/complete_task_controller.dart';
 import 'package:task_manager_firebase/app/modules/profile/controllers/notifications_controller.dart';
+import 'package:task_manager_firebase/app/routes/app_routes.dart';
 import 'package:task_manager_firebase/app/services/firebase_services.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -126,9 +127,14 @@ class ProfileScreen extends StatelessWidget {
                     const SizedBox(height: 28),
 
                     _SectionTitle("Account Management"),
-                    _MenuTile(
-                      icon: Icons.lock_outline,
-                      title: "Change Password",
+                    GestureDetector(
+                      onTap: () {
+                        Get.toNamed(AppRoutes.resetPasswordScreen);
+                      },
+                      child: _MenuTile(
+                        icon: Icons.lock_outline,
+                        title: "Change Password",
+                      ),
                     ),
                     _Divider(),
 

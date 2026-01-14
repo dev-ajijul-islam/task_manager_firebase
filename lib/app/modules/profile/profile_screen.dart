@@ -151,7 +151,31 @@ class ProfileScreen extends StatelessWidget {
                       padding: const EdgeInsets.only(top: 10),
                       child: InkWell(
                         onTap: () {
-                          authController.signOut();
+                          Get.dialog(
+                            AlertDialog(
+                              shape: RoundedRectangleBorder(borderRadius: .circular(10)),
+                              backgroundColor: Colors.white,
+                              title: Row(
+                                mainAxisAlignment: .spaceBetween,
+                                children: [
+                                  Text("Log Out"),
+                                  IconButton(onPressed: () {
+                                    Get.back();
+                                  }, icon: Icon(Icons.clear))
+                                ],
+                              ),
+                              content: Text("Do you want to logout?"),
+                              actions: [
+                        
+                                FilledButton(
+                                  onPressed: () {
+                                    authController.signOut();
+                                  },
+                                  child: Text("Logout"),
+                                ),
+                              ],
+                            ),
+                          );
                         },
                         child: Row(
                           children: const [

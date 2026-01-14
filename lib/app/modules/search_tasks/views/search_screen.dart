@@ -39,7 +39,7 @@ class SearchScreen extends StatelessWidget {
                 child: Obx(
                   () => ListView.separated(
                     itemBuilder: (context, index) =>
-                       TaskCard(task: searchController.tasks[index]),
+                        TaskCard(task: searchController.tasks[index]),
                     separatorBuilder: (context, index) => SizedBox(height: 10),
                     itemCount: searchController.tasks.length,
                   ),

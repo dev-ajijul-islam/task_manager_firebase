@@ -8,4 +8,5 @@ class AppRoutes {
   static const searchScreen = "/search-task";
   static const resetPasswordScreen = "/reset-password";
   static const updateProfileScreen = "/update-profile";
+  static const notificationScreen = "/notification-screen";
 }

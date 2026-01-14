@@ -34,7 +34,7 @@ class UpdateProfileController extends GetxController {
   Future<void> pickImage() async {
     final ImagePicker picker = .new();
     final picked = await picker.pickImage(source: ImageSource.gallery);
-    profilePhotoFile?.value = picked;
+    profilePhotoFile.value = picked;
   }
 
   Future<void> updateProfile() async {

@@ -77,7 +77,9 @@ class TopbarWidget extends StatelessWidget {
                     ),
                   ),
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Get.toNamed(AppRoutes.notificationScreen);
+                    },
                     icon: Icon(
                       Icons.notifications_outlined,
                       size: 25,

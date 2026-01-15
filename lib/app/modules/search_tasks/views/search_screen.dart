@@ -35,6 +35,7 @@ class SearchScreen extends StatelessWidget {
                   ),
                 ],
               ),
+              SizedBox(height: 20,),
               Expanded(
                 child: Obx(
                   () => ListView.separated(

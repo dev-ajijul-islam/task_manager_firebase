@@ -13,7 +13,7 @@ class SplashScreen extends StatelessWidget {
       if(authController.idToken != null){
         Get.offNamedUntil(AppRoutes.mainLayout, (route) => false,);
       }else{
-        Get.offNamedUntil(AppRoutes.signInScreen, (route) => false,);
+        Get.offNamedUntil(AppRoutes.welcomeScreen, (route) => false,);
       }
     },);
     return Scaffold(

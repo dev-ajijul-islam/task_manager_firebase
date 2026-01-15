@@ -22,13 +22,6 @@ class TopbarWidget extends StatelessWidget {
               StreamBuilder(
                 stream: FirebaseServices.auth.authStateChanges(),
                 builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return SizedBox(
-                      width: 30,
-                      height: 30,
-                      child: CircularProgressIndicator(),
-                    );
-                  }
                   if (snapshot.data == null) {
                     return SizedBox();
                   }

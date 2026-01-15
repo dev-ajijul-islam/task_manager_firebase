@@ -16,12 +16,20 @@ void createOrUpdateTaskDialog({
   final CreateTaskDialogController dialogController = Get.put(
     CreateTaskDialogController(),
   );
+  final DateFormat dateFormatter = DateFormat('yyyy-MM-dd');
 
   if (isUpdate) {
     dialogController.titleController.text = task!.title;
     dialogController.descriptionController.text = task.description;
-    dialogController.dueDateController.text = task.dueDate.toString();
-    dialogController.endDateController.text = task.endDate.toString();
+
+    dialogController.dueDateController.text = dateFormatter.format(
+      task.dueDate,
+    );
+
+    dialogController.endDateController.text = task.endDate != null
+        ? dateFormatter.format(task.endDate!)
+        : '';
+
     dialogController.tags.value = task.tags;
   } else {
     dialogController.clearFields();
@@ -35,7 +43,6 @@ void createOrUpdateTaskDialog({
     UpdateTaskController(),
   );
 
-  final AuthController authController = Get.put(AuthController());
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 

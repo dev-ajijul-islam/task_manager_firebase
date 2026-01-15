@@ -22,7 +22,7 @@ void createOrUpdateTaskDialog({
     dialogController.descriptionController.text = task.description;
     dialogController.dueDateController.text = task.dueDate.toString();
     dialogController.endDateController.text = task.endDate.toString();
-    dialogController.tagsController.text = task.tags.toString();
+    dialogController.tags.value = task.tags;
   } else {
     dialogController.clearFields();
   }
@@ -151,8 +151,52 @@ void createOrUpdateTaskDialog({
                               ),
                             ),
                             const SizedBox(width: 10),
-                            _buildIconButton(Icons.add),
+                            IconButton(
+                              onPressed: () {
+                                dialogController.tags.add(
+                                  dialogController.tagsController.text,
+                                );
+                                dialogController.tagsController.clear();
+                              },
+                              icon: Icon(Icons.add),
+                            ),
                           ],
+                        ),
+
+                        SizedBox(
+                          height: 50,
+                          child: ListView.separated(
+                            scrollDirection: .horizontal,
+                            itemBuilder: (context, index) => Row(
+                              children: [
+                                Chip(
+                                  color: WidgetStatePropertyAll(
+                                    Colors.transparent,
+                                  ),
+                                  elevation: 0,
+                                  side: .none,
+                                  shape: RoundedRectangleBorder(
+                                    side: .none,
+                                    borderRadius: .circular(100),
+                                  ),
+                                  label: Text(dialogController.tags[index]),
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    dialogController.removeTag(index);
+                                  },
+                                  child: Icon(
+                                    Icons.clear,
+                                    size: 16,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            separatorBuilder: (context, index) =>
+                                SizedBox(width: 10),
+                            itemCount: dialogController.tags.length,
+                          ),
                         ),
 
                         const SizedBox(height: 15),
@@ -275,12 +319,7 @@ void createOrUpdateTaskDialog({
                                                     status: dialogController
                                                         .selectedStatus
                                                         .value,
-                                                    tags: [
-                                                      dialogController
-                                                          .tagsController
-                                                          .text
-                                                          .trim(),
-                                                    ],
+                                                    tags: dialogController.tags,
                                                     frequency: dialogController
                                                         .selectedFrequency
                                                         .value,
@@ -336,12 +375,7 @@ void createOrUpdateTaskDialog({
                                                     status: dialogController
                                                         .selectedStatus
                                                         .value,
-                                                    tags: [
-                                                      dialogController
-                                                          .tagsController
-                                                          .text
-                                                          .trim(),
-                                                    ],
+                                                    tags: dialogController.tags,
                                                     frequency: dialogController
                                                         .selectedFrequency
                                                         .value,

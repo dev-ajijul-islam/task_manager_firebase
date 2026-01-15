@@ -12,6 +12,7 @@ class CreateTaskDialogController extends GetxController {
   var selectedStatus = "In Process".obs;
   var selectedFrequency = "Weekly".obs;
   var isRecurring = false.obs;
+  RxList<String> tags = <String>[].obs;
 
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
@@ -21,6 +22,9 @@ class CreateTaskDialogController extends GetxController {
 
   CreateTaskDialogController({this.isUpdate, this.task});
 
+  void removeTag(int index){
+    tags.removeAt(index);
+  }
 
   void selectDate(BuildContext context, bool isDueDate) async {
     final date = await showDatePicker(
@@ -48,6 +52,7 @@ class CreateTaskDialogController extends GetxController {
     dueDateController.clear();
     endDateController.clear();
     tagsController.clear();
+    tags.clear();
   }
 
   @override

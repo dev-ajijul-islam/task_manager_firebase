@@ -1,11 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
+import 'package:task_manager_firebase/app/modules/home/controllers/categories_controller.dart';
 import 'package:task_manager_firebase/app/modules/home/data/models/task_model.dart';
 import 'package:task_manager_firebase/app/modules/main_layout/controllers/create_task_dialog_controller.dart';
 import 'package:task_manager_firebase/app/services/firebase_services.dart';
 
 class CreateTaskController extends GetxController {
   final CreateTaskDialogController createTaskDialogController = Get.put(CreateTaskDialogController());
+  final CategoriesController categoriesController = Get.put(CategoriesController());
   var isLoading = false.obs;
 
   Future<bool> createTask({required TaskModel task}) async {
@@ -18,6 +20,7 @@ class CreateTaskController extends GetxController {
             return true;
           });
       createTaskDialogController.clearFields();
+      categoriesController.fetchTasks();
       return true;
     } on FirebaseException catch (e) {
       Get.snackbar("Failed", e.message.toString());

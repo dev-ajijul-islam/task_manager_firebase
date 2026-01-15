@@ -46,7 +46,7 @@ class CalenderController extends GetxController {
         .listen(
           (snapshot) {
         allTasks.value =
-            snapshot.docs.map((e) => TaskModel.fromJson(e.data())).toList();
+            snapshot.docs.map((e) => TaskModel.fromJson({...e.data(),"id": e.id})).toList();
 
         _buildTaskMap();
         isLoading.value = false;

@@ -13,7 +13,7 @@ class SearchScreen extends StatelessWidget {
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.symmetric(vertical: 20,horizontal: 10),
           child: Column(
             children: [
               Row(

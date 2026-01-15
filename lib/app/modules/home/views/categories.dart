@@ -66,7 +66,7 @@ class Categories extends StatelessWidget {
                           ),
                         ),
                         child: Padding(
-                          padding: const EdgeInsets.only(left: 16),
+                          padding: const EdgeInsets.only(left: 18),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -74,12 +74,18 @@ class Categories extends StatelessWidget {
                               Text(
                                 tag,
                                 style: Theme.of(context).textTheme.titleLarge
-                                    ?.copyWith(color: Colors.white),
+                                    ?.copyWith(
+                                      color: Colors.white,
+                                      fontSize: 18,
+                                    ),
                               ),
                               Text(
                                 "$projectCount Projects",
                                 style: Theme.of(context).textTheme.titleMedium
-                                    ?.copyWith(color: Colors.white),
+                                    ?.copyWith(
+                                      color: Colors.white,
+                                      fontSize: 12,
+                                    ),
                               ),
                             ],
                           ),
@@ -123,7 +129,7 @@ class Categories extends StatelessWidget {
 
                                 if (avatars.isNotEmpty)
                                   CircleAvatar(
-                                    radius: 15,
+                                    radius: 14,
                                     backgroundImage: NetworkImage(avatars[0]),
                                   ),
                               ],

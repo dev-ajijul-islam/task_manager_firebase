@@ -46,7 +46,10 @@ class HomeScreen extends StatelessWidget {
                       return Center(child: Text("Task not found"));
                     }
                     return ListView.separated(
-                      itemBuilder: (context, index) => TaskCard(task: activeTaskController.activeTasks[index],),
+                      padding: .symmetric(horizontal: 10),
+                      itemBuilder: (context, index) => TaskCard(
+                        task: activeTaskController.activeTasks[index],
+                      ),
                       separatorBuilder: (context, index) =>
                           SizedBox(height: 10),
                       itemCount: activeTaskController.activeTasks.length,
@@ -60,7 +63,10 @@ class HomeScreen extends StatelessWidget {
                       return Center(child: Text("Task not found"));
                     }
                     return ListView.separated(
-                      itemBuilder: (context, index) => TaskCard(task: completeTaskController.completedTasks[index],),
+                      padding: .symmetric(horizontal: 10),
+                      itemBuilder: (context, index) => TaskCard(
+                        task: completeTaskController.completedTasks[index],
+                      ),
                       separatorBuilder: (context, index) =>
                           SizedBox(height: 10),
                       itemCount: completeTaskController.completedTasks.length,

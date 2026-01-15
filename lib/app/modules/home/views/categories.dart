@@ -35,7 +35,7 @@ class Categories extends StatelessWidget {
           }
 
           if (controller.tagMap.isEmpty) {
-            return const Center(child: Text("No categories found"));
+            return SizedBox(height: 150, child: const Center(child: Text("No categories found")));
           }
 
           final tags = controller.tagMap.keys.toList();

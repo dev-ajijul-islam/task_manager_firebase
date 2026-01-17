@@ -43,7 +43,6 @@ void createOrUpdateTaskDialog({
     UpdateTaskController(),
   );
 
-
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   showGeneralDialog(

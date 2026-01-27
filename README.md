@@ -3,7 +3,7 @@
 <img src="assets/images/icon.png" alt="App Logo" width="280" />
 
 
-# 📋 TaskFlow
+# 📋 TaskManagment
 **Smart Task & Project Management App**
 
 [![Flutter](https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white)](https://flutter.dev/)
@@ -91,7 +91,7 @@ It combines **task management**, **project tracking**, and a **real-time chat sy
 - **Integrated with Tasks**: Chat directly from task/project views for collaboration
 - **Clean UI**: Dedicated chat tab with intuitive navigation
 
-This feature transforms TaskFlow into a **collaborative productivity hub**, not just a solo planner.
+This feature transforms TaskManagment into a **collaborative productivity hub**, not just a solo planner.
 
 ---
 
